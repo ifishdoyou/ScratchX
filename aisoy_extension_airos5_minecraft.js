@@ -1460,6 +1460,19 @@ new (function() {
 		}
 	}
 
+    ext.minecraft_xpos = function(bot){
+        return 0;
+    }
+
+    ext.minecraft_ypos = function(bot){
+        return 0;
+    }
+
+    ext.minecraft_zpos = function(bot){
+        return 0;
+    }
+
+
     ext.minecraft_configureNetwork = function(bot, ip, callback){
         var robot=findBot(bot);
         
@@ -1585,8 +1598,11 @@ new (function() {
     function setBlocksMinecraft(name){
         descriptor3 = {
             blocks: [
-                ['w', '[A] %s connect to %s minecraft network', 'minecraft_configureNetwork', name, '127.0.0.1'],
-                ['w', '[A] %s writes %s on minecraft', 'minecraft_write', name, 'Hello'],
+                ['r', '[M] %s X pos', 'minecraft_xpos', name],
+                ['r', '[M] %s Y pos', 'minecraft_ypos', name],
+                ['r', '[M] %s Z pos', 'minecraft_zpos', name],
+                ['w', '[M] %s connect to %s minecraft network', 'minecraft_configureNetwork', name, '127.0.0.1'],
+                ['w', '[M] %s writes %s on minecraft', 'minecraft_write', name, 'Hello'],
             ],
             menus: {
             },
