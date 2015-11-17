@@ -236,13 +236,13 @@ new (function() {
 			serviceType : 'audio/stop_all'
 		})
 
-        this.minecraftConfigureNetworkRequest = new ROSLIB.Service({
+        this.minecraftConfigureNetwork = new ROSLIB.Service({
             ros : this.ros,
             name : '/app/minecraft/configure_network',
             serviceType : 'minecraft/configure_network'
         })
 
-        this.minecraftWriteRequest = new ROSLIB.Service({
+        this.minecraftWrite = new ROSLIB.Service({
             ros : this.ros,
             name : '/app/minecraft/write',
             serviceType : 'minecraft/write'
@@ -1469,7 +1469,7 @@ new (function() {
                 wait : true
             });
                     
-            robot.sayService.callService(minecraftConfigureNetworkRequest, function( result1 ){
+            robot.minecraftConfigureNetwork.callService(minecraftConfigureNetworkRequest, function( result1 ){
                 if(callback!=null)
                     callback();
             });
@@ -1485,7 +1485,7 @@ new (function() {
                 wait : true
             });
                     
-            robot.sayService.callService(minecraftWriteRequest, function( result1 ){
+            robot.minecraftWrite.callService(minecraftWriteRequest, function( result1 ){
                 if(callback!=null)
                     callback();
             });
