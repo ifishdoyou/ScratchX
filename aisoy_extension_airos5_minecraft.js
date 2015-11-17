@@ -1317,6 +1317,7 @@ new (function() {
 					ls = result1.list;
 					ls=ls.sort();
 					setBlocks(bot,ls);
+                    setBlocksMinecraft(bot);
 					ScratchExtensions.register(bot, descriptor2, ext);
                     ScratchExtensions.register(bot, descriptor3, ext);
 			});
@@ -1548,7 +1549,7 @@ new (function() {
     	};
     }
 
-    function setBlocksMinecraft(name, list){
+    function setBlocksMinecraft(name){
         descriptor3 = {
             blocks: [
                 ['w', '[A] %s connect to %s minecraft network', 'minecraft_configureNetwork', name, '127.0.0.1'],
