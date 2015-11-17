@@ -1459,6 +1459,14 @@ new (function() {
 		}
 	}
 
+    ext.minecraft_configureNetwork = function(bot, ip, callback){
+
+    }
+
+    ext.minecraft_write = function(bot, sentence, callback){
+        
+    }
+
 
 
     var descriptor = {
