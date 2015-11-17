@@ -1318,6 +1318,7 @@ new (function() {
 					ls=ls.sort();
 					setBlocks(bot,ls);
 					ScratchExtensions.register(bot, descriptor2, ext);
+                    ScratchExtensions.register(bot, descriptor3, ext);
 			});
 		}
 	}
@@ -1548,17 +1549,11 @@ new (function() {
     }
 
     function setBlocksMinecraft(name, list){
-        descriptor2 = {
+        descriptor3 = {
             blocks: [
                 ['w', '[A] %s connect to %s minecraft network', 'minecraft_configureNetwork', name, '127.0.0.1'],
                 ['w', '[A] %s writes %s on minecraft', 'minecraft_write', name, 'Hello'],
             ],
-            menus: {
-                soundList: list,
-                blocking: ['block', 'no block'],
-                velocity: ['slow','medium','fast'],
-                activate: ['on', 'off']
-            },
         };
     }
     //var idIP = prompt("What's your Aisoy1 IP?");
