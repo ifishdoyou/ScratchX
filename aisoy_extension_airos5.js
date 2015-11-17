@@ -1536,5 +1536,5 @@ new (function() {
     	};
     }
     //var idIP = prompt("What's your Aisoy1 IP?");
-    ScratchExtensions.register('Aisoy1v4 Extension', descriptor, ext);
+    ScratchExtensions.register('Aisoy1v5 Extension', descriptor, ext);
 })({});
