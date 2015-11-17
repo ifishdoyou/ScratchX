@@ -236,13 +236,13 @@ new (function() {
 			serviceType : 'audio/stop_all'
 		})
 
-        this.minecraftConfigureNetwork = new ROSLIB.Service({
+        this.minecraftConfigureNetworkRequest = new ROSLIB.Service({
             ros : this.ros,
             name : '/app/minecraft/configure_network',
             serviceType : 'minecraft/configure_network'
         })
 
-        this.minecraftWrite = new ROSLIB.Service({
+        this.minecraftWriteRequest = new ROSLIB.Service({
             ros : this.ros,
             name : '/app/minecraft/write',
             serviceType : 'minecraft/write'
@@ -419,6 +419,7 @@ new (function() {
 			if(bots[i].name==bot){
 				aux=i;
 				ScratchExtensions.unregister(bot);
+                ScratchExtensions.unregister(bot+"-minecraft");
 			}
 		}
 		
@@ -1460,11 +1461,35 @@ new (function() {
 	}
 
     ext.minecraft_configureNetwork = function(bot, ip, callback){
-
+        var robot=findBot(bot);
+        
+        if(robot!=null){
+            var minecraftConfigureNetworkRequest =  new ROSLIB.ServiceRequest({
+                data : ip,
+                wait : true
+            });
+                    
+            robot.sayService.callService(minecraftConfigureNetworkRequest, function( result1 ){
+                if(callback!=null)
+                    callback();
+            });
+        }
     }
 
     ext.minecraft_write = function(bot, sentence, callback){
+        var robot=findBot(bot);
         
+        if(robot!=null){
+            var minecraftWriteRequest =  new ROSLIB.ServiceRequest({
+                data : sentence,
+                wait : true
+            });
+                    
+            robot.sayService.callService(minecraftWriteRequest, function( result1 ){
+                if(callback!=null)
+                    callback();
+            });
+        }
     }
 
 
