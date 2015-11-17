@@ -1319,7 +1319,7 @@ new (function() {
 					setBlocks(bot,ls);
                     setBlocksMinecraft(bot);
 					ScratchExtensions.register(bot, descriptor2, ext);
-                    ScratchExtensions.register(bot, descriptor3, ext);
+                    ScratchExtensions.register(bot+"-minecraft", descriptor3, ext);
 			});
 		}
 	}
