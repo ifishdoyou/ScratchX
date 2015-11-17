@@ -1555,6 +1555,8 @@ new (function() {
                 ['w', '[A] %s connect to %s minecraft network', 'minecraft_configureNetwork', name, '127.0.0.1'],
                 ['w', '[A] %s writes %s on minecraft', 'minecraft_write', name, 'Hello'],
             ],
+            menus: {
+            },
         };
     }
     //var idIP = prompt("What's your Aisoy1 IP?");
