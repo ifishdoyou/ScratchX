@@ -855,6 +855,8 @@ new (function() {
 		var waitAux = true;
 		/*if(block != 'block')
 			waitAux = false;*/
+        if(direction == 'stop')
+            waitAux = false;
 
 		if(robot!=null){
 			if(!moving || (direction=='stop' && moving)){
