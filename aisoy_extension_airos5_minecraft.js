@@ -83,6 +83,8 @@ new (function() {
         this.eyesCoverListenedValue = null;
 
         this.xMinecraft = 0.0;
+        this.yMinecraft = 0.0;
+        this.zMinecraft = 0.0;
 
 
 
@@ -1498,11 +1500,13 @@ new (function() {
     }
 
     ext.minecraft_ypos = function(bot){
-        return 0;
+        var robot=findBot(bot);
+        return robot.yMinecraft;
     }
 
     ext.minecraft_zpos = function(bot){
-        return 0;
+        var robot=findBot(bot);
+        return robot.zMinecraft;
     }
 
 
@@ -1568,9 +1572,9 @@ new (function() {
                 });
                     
                 robot.minecraftGetPosition.callService(minecraftGetPositionRequest, function( result1 ){
-                    alert(result1.x);
                     robot.xMinecraft = result1.x;
-                    alert(result1.y);
+                    robot.yMinecraft = result1.y;
+                    robot.zMinecraft = result1.z;
                     callback();
                 });
             });
