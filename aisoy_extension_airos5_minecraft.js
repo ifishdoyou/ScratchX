@@ -82,6 +82,8 @@ new (function() {
         this.eyesCoverListened = false;
         this.eyesCoverListenedValue = null;
 
+        this.xMinecraft = 0.0;
+
 
 
 		// Connecting to ROS
@@ -1488,9 +1490,10 @@ new (function() {
             });
                     
             robot.minecraftGetPosition.callService(minecraftGetPositionRequest, function( result1 ){
-                return float(x);
+                return float(result1.x);
             });
         }
+        //return xMinecraft;
     }
 
     ext.minecraft_ypos = function(bot){
