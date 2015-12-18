@@ -1483,7 +1483,7 @@ new (function() {
 	}
 
     ext.minecraft_xpos = function(bot){
-        var robot=findBot(bot);
+        /*var robot=findBot(bot);
         
         if(robot!=null){
             var minecraftGetPositionRequest =  new ROSLIB.ServiceRequest({
@@ -1492,8 +1492,8 @@ new (function() {
             robot.minecraftGetPosition.callService(minecraftGetPositionRequest, function( result1 ){
                 return float(result1.x);
             });
-        }
-        //return xMinecraft;
+        }*/
+        return xMinecraft;
     }
 
     ext.minecraft_ypos = function(bot){
@@ -1566,6 +1566,17 @@ new (function() {
                 if(callback!=null)
                     callback();
             });
+
+            var robot=findBot(bot);
+        
+        if(robot!=null){
+            var minecraftGetPositionRequest =  new ROSLIB.ServiceRequest({
+            });
+                    
+            robot.minecraftGetPosition.callService(minecraftGetPositionRequest, function( result1 ){
+                robot.xMinecraft = float(result1.x);
+            });
+        }
         }
     }
 
