@@ -1493,7 +1493,8 @@ new (function() {
                 return float(result1.x);
             });
         }*/
-        return xMinecraft;
+        var robot=findBot(bot);
+        return robot.xMinecraft;
     }
 
     ext.minecraft_ypos = function(bot){
@@ -1568,6 +1569,7 @@ new (function() {
                     
                 robot.minecraftGetPosition.callService(minecraftGetPositionRequest, function( result1 ){
                     alert(result1.x);
+                    var robot = findBot(bot);
                     robot.xMinecraft = float(result1.x);
                     if(callback!=null)
                         callback();
