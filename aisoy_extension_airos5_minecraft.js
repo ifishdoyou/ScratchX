@@ -247,6 +247,18 @@ new (function() {
             name : '/app/minecraft/write',
             serviceType : 'minecraft/write'
         })
+
+        this.minecraftSetBlock = new ROSLIB.Service({
+            ros : this.ros,
+            name : '/app/minecraft/set_block',
+            serviceType : 'minecraft/set_block'
+        })
+
+        this.minecraftMove = new ROSLIB.Service({
+            ros : this.ros,
+            name : '/app/minecraft/move',
+            serviceType : 'minecraft/move'
+        })
 		
 		
 		// Listeners and services
@@ -1507,6 +1519,38 @@ new (function() {
         }
     }
 
+    ext.minecraft_set_block = function(bot, direction, callback){
+        var robot=findBot(bot);
+        
+        if(robot!=null){
+            var minecraftSetBlockRequest =  new ROSLIB.ServiceRequest({
+                data : direction,
+                wait : true
+            });
+                    
+            robot.minecraftSetBlock.callService(minecraftSetBlockRequest, function( result1 ){
+                if(callback!=null)
+                    callback();
+            });
+        }
+    }
+
+    ext.minecraft_move = function(bot, direction, callback){
+        var robot=findBot(bot);
+        
+        if(robot!=null){
+            var minecraftMoveRequest =  new ROSLIB.ServiceRequest({
+                data : direction,
+                wait : true
+            });
+                    
+            robot.minecraftMove.callService(minecraftMoveRequest, function( result1 ){
+                if(callback!=null)
+                    callback();
+            });
+        }
+    }
+
 
 
     var descriptor = {
@@ -1605,8 +1649,11 @@ new (function() {
                 ['r', '[M] %s Z pos', 'minecraft_zpos', name],
                 ['w', '[M] %s connect to %s minecraft network', 'minecraft_configureNetwork', name, '127.0.0.1'],
                 ['w', '[M] %s writes %s on minecraft', 'minecraft_write', name, 'Hello'],
+                ['w', '[M] %s set block %m.directions on minecraft', 'minecraft_set_block', name, 'forward'],
+                ['w', '[M] %s moves player %m.directions on minecraft', 'minecraft_move', name, 'forward'],
             ],
             menus: {
+                directions: ['forward','backwards','up','down','left','right']
             },
         };
     }
