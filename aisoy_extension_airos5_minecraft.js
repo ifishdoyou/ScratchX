@@ -1570,7 +1570,7 @@ new (function() {
                 robot.minecraftGetPosition.callService(minecraftGetPositionRequest, function( result1 ){
                     alert(result1.x);
                     var robot = findBot(bot);
-                    robot.xMinecraft = float(result1.x);
+                    robot.xMinecraft = parseFloat(result1.x);
                     if(callback!=null)
                         callback();
                 });
