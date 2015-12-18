@@ -1569,10 +1569,9 @@ new (function() {
                     
                 robot.minecraftGetPosition.callService(minecraftGetPositionRequest, function( result1 ){
                     alert(result1.x);
-                    var robot = findBot(bot);
-                    robot.xMinecraft = parseFloat(result1.x);
-                    if(callback!=null)
-                        callback();
+                    robot.xMinecraft = result1.x;
+                    alert(result1.y);
+                    callback();
                 });
             });
         }
