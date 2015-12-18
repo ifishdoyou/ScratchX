@@ -1567,16 +1567,13 @@ new (function() {
                     callback();
             });
 
-            var robot=findBot(bot);
-        
-        if(robot!=null){
             var minecraftGetPositionRequest =  new ROSLIB.ServiceRequest({
             });
                     
             robot.minecraftGetPosition.callService(minecraftGetPositionRequest, function( result1 ){
+                alert(result1.x);
                 robot.xMinecraft = float(result1.x);
             });
-        }
         }
     }
 
