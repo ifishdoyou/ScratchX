@@ -1563,16 +1563,15 @@ new (function() {
             });
                     
             robot.minecraftMove.callService(minecraftMoveRequest, function( result1 ){
-                if(callback!=null)
-                    callback();
-            });
-
-            var minecraftGetPositionRequest =  new ROSLIB.ServiceRequest({
-            });
+                var minecraftGetPositionRequest =  new ROSLIB.ServiceRequest({
+                });
                     
-            robot.minecraftGetPosition.callService(minecraftGetPositionRequest, function( result1 ){
-                alert(result1.x);
-                robot.xMinecraft = float(result1.x);
+                robot.minecraftGetPosition.callService(minecraftGetPositionRequest, function( result1 ){
+                    alert(result1.x);
+                    robot.xMinecraft = float(result1.x);
+                    if(callback!=null)
+                        callback();
+                });
             });
         }
     }
