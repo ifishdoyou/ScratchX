@@ -259,6 +259,12 @@ new (function() {
             name : '/app/minecraft/move',
             serviceType : 'minecraft/move'
         })
+
+        this.minecraftGetPosition = new ROSLIB.Service({
+            ros : this.ros,
+            name : '/app/minecraft/get_position',
+            serviceType : 'minecraft/get_position'
+        })
 		
 		
 		// Listeners and services
@@ -1475,7 +1481,16 @@ new (function() {
 	}
 
     ext.minecraft_xpos = function(bot){
-        return 0;
+        var robot=findBot(bot);
+        
+        if(robot!=null){
+            var minecraftGetPositionRequest =  new ROSLIB.ServiceRequest({
+            });
+                    
+            robot.minecraftGetPosition.callService(minecraftGetPositionRequest, function( result1 ){
+                return float(x);
+            });
+        }
     }
 
     ext.minecraft_ypos = function(bot){
