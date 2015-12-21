@@ -1487,7 +1487,7 @@ new (function() {
     ext.minecraft_xpos = function(bot){
         var robot=findBot(bot);
 
-        var minecraftGetPositionRequest =  new ROSLIB.ServiceRequest({
+        /*var minecraftGetPositionRequest =  new ROSLIB.ServiceRequest({
                 });
                     
         robot.minecraftGetPosition.callService(minecraftGetPositionRequest, function( result1 ){
@@ -1495,7 +1495,8 @@ new (function() {
             robot.yMinecraft = result1.y;
             robot.zMinecraft = result1.z;
             return robot.xMinecraft;
-        });
+        });*/
+        return robot.xMinecraft;
     }
 
     ext.minecraft_ypos = function(bot){
