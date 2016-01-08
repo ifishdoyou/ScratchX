@@ -240,6 +240,12 @@ new (function() {
 			serviceType : 'audio/stop_all'
 		})
 
+        this.restoreVolumeService = new ROSLIB.Service({
+            ros : this.ros,
+            name : '/airos5/audio/restore_volume',
+            serviceType : 'audio/restore_volume'
+        })
+
         this.minecraftConfigureNetwork = new ROSLIB.Service({
             ros : this.ros,
             name : '/app/minecraft/configure_network',
@@ -477,6 +483,13 @@ new (function() {
 			setBlocks(botAux,ls);
 			ScratchExtensions.register(botAux, descriptor2, ext);*/
 			getSounds(botAux);
+
+            var request = new ROSLIB.ServiceRequest({
+            });
+            
+            aux.restoreVolumeService.callService(request, function(result1){
+            });
+
             setTimeout(function(){ 
                 var robot=findBot(bot);
                 if(robot==null)
