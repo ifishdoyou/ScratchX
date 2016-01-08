@@ -484,12 +484,6 @@ new (function() {
 			ScratchExtensions.register(botAux, descriptor2, ext);*/
 			getSounds(botAux);
 
-            var request = new ROSLIB.ServiceRequest({
-            });
-            
-            aux.restoreVolumeService.callService(request, function(result1){
-            });
-
             setTimeout(function(){ 
                 var robot=findBot(bot);
                 if(robot==null)
@@ -512,6 +506,13 @@ new (function() {
 		var typeTTS="pico";
 		
 		if(robot!=null){
+
+            var reqVolume = new ROSLIB.ServiceRequest({
+            });
+            
+            robot.restoreVolumeService.callService(reqVolume, function(result1){
+            });
+
 			switch (language){
 				case 'English':
 					lang=0;
