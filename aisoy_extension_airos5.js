@@ -236,6 +236,12 @@ new (function() {
 			serviceType : 'audio/stop_all'
 		})
 
+        this.restoreVolumeService = new ROSLIB.Service({
+            ros : this.ros,
+            name : '/airos5/audio/restore_volume',
+            serviceType : 'audio/restore_volume'
+        })
+
         this.minecraftConfigureNetwork = new ROSLIB.Service({
             ros : this.ros,
             name : '/app/minecraft/configure_network',
@@ -476,6 +482,13 @@ new (function() {
 		var typeTTS="pico";
 		
 		if(robot!=null){
+
+            var reqVolume = new ROSLIB.ServiceRequest({
+            });
+            
+            robot.restoreVolumeService.callService(reqVolume, function(result1){
+            });
+
 			switch (language){
 				case 'English':
 					lang=0;
