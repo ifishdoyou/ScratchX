@@ -375,10 +375,10 @@ new (function() {
 		});
 		
 		
-		this.asr.subscribe((function(message) {
+		/*this.asr.subscribe((function(message) {
 			bot.listenedSentence=(message.data).toString();
 			bot.listened=true;
-		}).bind(this));
+		}).bind(this));*/
 
 	}
 	
@@ -1143,13 +1143,13 @@ new (function() {
 	ext.botHeard = function(bot,sentence){
 		var robot=findBot(bot);
 
-		/*if(robot.asrListenerOn == false){
+		if(robot.asrListenerOn == false){
 			robot.asrListenerOn = true;
 			robot.listeners.asr.subscribe((function(message) {
 				robot.listenedSentence=(message.data).toString();
 				robot.listened=true;
 			}).bind(this));
-		}*/
+		}
 		
         if(robot != null){
     		if(robot.listening && robot.listened){
