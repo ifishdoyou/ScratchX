@@ -1601,7 +1601,7 @@ new (function() {
         blocks: [
 			[' ', '[D] connect %s to ip %s', 'connectBot', 'bot1', 'aisoy1.local'],
 			[' ', '[D] disconnect %s', 'disconnectBot', 'bot1'],
-			['w', '[D] %s set %m.selectLan language to %m.textLanguage with %m.voiceLanguage voice', 'setLanguage', 'bot1', 'all','English', 'Male'],
+			['w', '[D] %s set %m.selectLan language to %m.textLanguage with %m.voiceLanguage voice', 'setLanguage', 'bot1', 'all','English', 'Female'],
 			['w', '[D] %s grammar = %s', 'setGrammar', 'bot1', 'list'],
 			['w', '[A] %s %m.asrMenu ASR recognition %m.blocking', 'startStopAsr', 'bot1', 'start', 'block'],
 			//['w', 'set %s to %m.states state %m.blocking', 'setEmotion', 'bot1', 'Normal', 'block'],
@@ -1643,7 +1643,7 @@ new (function() {
 		menus: {
 			selectLan: ['all', 'ASR', 'TTS'],
 			textLanguage: ['English', 'Spanish', 'Catalan', 'French'],
-			voiceLanguage: ['Male','Female'],
+			voiceLanguage: ['Female','Male'],
 			states: ['Normal', 'Sad', 'Happy', 'Angry', 'Indifferent', 'Surprise', 'Disgust', 'Relief', 'Reproach', 'Pride', 'Admiration', 'Scared', 'Sleep', 'NoEmotion'],
 			saying: ['with','without'],
 			sides: ['head', 'left', 'right'],
