@@ -490,32 +490,32 @@ new (function() {
             });
 
 			switch (language){
-				case 'English':
-					lang=0;
-					langv4="en";
-					//if(voice=='Male'){index=0; indexv4="default";}//indexv4=EnDiphoneFestivalVoice;}
-					//if(voice=='Male'){index=0; indexv4=EnDiphoneFestivalVoice; typeTTS="festival";}
-					if(voice=='Male'){index=0; indexv4="default"; typeTTS="espeak";}
-					else{index=1; indexv4="default";}//indexv4=EnArticFestivalVoice;} 
-					break;
-				case 'Spanish':
-					lang=1;
-					langv4="es";
-					//if(voice=='Male'){index=2; indexv4="default";}//indexv4=EsDiphoneMaleFestivalVoice;}
-					//if(voice=='Male'){index=2; indexv4=EsDiphoneMaleFestivalVoice; typeTTS="festival";}
-					if(voice=='Male'){index=2; indexv4="default"; typeTTS="espeak";}
-					else{index=3; indexv4="default";}//indexv4=EsDiphoneFemaleFestivalVoice;} 
-					break;
-				case 'Catalan': 
-					if(voice=='Male'){lang=2; langv4="ca"; index=4; indexv4="default"; typeTTS="espeak";}
-					else {lang=2; langv4="ca"; index=4; indexv4="upc_ca_bet_hts"; typeTTS="festival";}
-					break;
-				case 'French': 
-					if(voice=='Male'){lang=3; langv4="fr"; index=5; indexv4="default"; typeTTS="espeak";}
-					else {lang=3; langv4="fr"; index=5; indexv4="default";}//typeTTS="espeak";
-					break;
-				default: index=0;break;		
-			}
+                case 'English':
+                    lang=0;
+                    langv4="en";
+                    //if(voice=='Male'){index=0; indexv4="default";}//indexv4=EnDiphoneFestivalVoice;}
+                    if(voice=='Male'){index=0; indexv4=EnDiphoneFestivalVoice; typeTTS="festival";}
+                    //if(voice=='Male'){index=0; indexv4="default"; typeTTS="espeak";}
+                    else{index=1; indexv4="default";}//indexv4=EnArticFestivalVoice;} 
+                    break;
+                case 'Spanish':
+                    lang=1;
+                    langv4="es";
+                    //if(voice=='Male'){index=2; indexv4="default";}//indexv4=EsDiphoneMaleFestivalVoice;}
+                    if(voice=='Male'){index=2; indexv4=EsDiphoneMaleFestivalVoice; typeTTS="festival";}
+                    //if(voice=='Male'){index=2; indexv4="default"; typeTTS="espeak";}
+                    else{index=3; indexv4="default";}//indexv4=EsDiphoneFemaleFestivalVoice;} 
+                    break;
+                case 'Catalan': 
+                    if(voice=='Male'){lang=2; langv4="ca"; index=4; indexv4="default"; typeTTS="espeak";}
+                    else {lang=2; langv4="ca"; index=4; indexv4="upc_ca_bet_hts"; typeTTS="festival";}
+                    break;
+                case 'French': 
+                    if(voice=='Male'){lang=3; langv4="fr"; index=5; indexv4="default"; typeTTS="espeak";}
+                    else {lang=3; langv4="fr"; index=5; indexv4="default";}//typeTTS="espeak";
+                    break;
+                default: index=0;break;     
+            }
 			
 			var req;
 				if(lang == 2 || lang == 3) {
