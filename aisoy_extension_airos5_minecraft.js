@@ -518,16 +518,16 @@ new (function() {
 					lang=0;
 					langv4="en";
 					//if(voice=='Male'){index=0; indexv4="default";}//indexv4=EnDiphoneFestivalVoice;}
-					//if(voice=='Male'){index=0; indexv4=EnDiphoneFestivalVoice; typeTTS="festival";}
-					if(voice=='Male'){index=0; indexv4="default"; typeTTS="espeak";}
+					if(voice=='Male'){index=0; indexv4=EnDiphoneFestivalVoice; typeTTS="festival";}
+					//if(voice=='Male'){index=0; indexv4="default"; typeTTS="espeak";}
 					else{index=1; indexv4="default";}//indexv4=EnArticFestivalVoice;} 
 					break;
 				case 'Spanish':
 					lang=1;
 					langv4="es";
 					//if(voice=='Male'){index=2; indexv4="default";}//indexv4=EsDiphoneMaleFestivalVoice;}
-					//if(voice=='Male'){index=2; indexv4=EsDiphoneMaleFestivalVoice; typeTTS="festival";}
-					if(voice=='Male'){index=2; indexv4="default"; typeTTS="espeak";}
+					if(voice=='Male'){index=2; indexv4=EsDiphoneMaleFestivalVoice; typeTTS="festival";}
+					//if(voice=='Male'){index=2; indexv4="default"; typeTTS="espeak";}
 					else{index=3; indexv4="default";}//indexv4=EsDiphoneFemaleFestivalVoice;} 
 					break;
 				case 'Catalan': 
