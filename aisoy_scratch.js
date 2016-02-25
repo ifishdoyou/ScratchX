@@ -1495,7 +1495,7 @@ new (function() {
 			['w', '[A] %s moves eyes to %n %m.velocity', 'moveEyes', 'bot1',0.5, 'medium'],
 			['w', '[A] %s heart light to: red %n green %n blue %n in %n secs', 'hearth', 'bot1', 255, 255, 255, 1],
 			//['w', '[A] %s draw in mouth picture %s %m.blocking', 'mouthDraw','bot1','                                          x            xx            x x          x   x        x     xxxxxxxx                               ','no block'],
-			['w', '[A] %s draws %s of %s in mouth', 'mouthDrawImage', 'bot1','costume1','Sprite1'],
+			//['w', '[A] %s draws %s of %s in mouth', 'mouthDrawImage', 'bot1','costume1','Sprite1'],
 			['w', '[A] %s writes %s in mouth', 'mouthWrite','bot1','text to write'],
 			['h', '[E] when %s is touched at %m.sides', 'botTouched', 'bot1', 'head'],
 			['h', '[E] when %s is in position %m.positions', 'botMoved', 'bot1', 'standup'],
