@@ -1545,7 +1545,7 @@ new (function() {
         
         if(robot!=null){
             var minecraftWriteRequest =  new ROSLIB.ServiceRequest({
-                data : sentence,
+                data : sentence.toString(),
                 wait : true
             });
                     
