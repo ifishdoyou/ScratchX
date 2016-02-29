@@ -1697,7 +1697,7 @@ new (function() {
                 ['w', '[M] %s moves player %m.directions on minecraft', 'minecraft_move', name, 'forward'],
             ],
             menus: {
-                directions: ['forward','backward','up','down','left','right']
+                directions: ['forward','backward','jump','left','right']
             },
         };
     }
