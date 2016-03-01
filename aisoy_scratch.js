@@ -1072,61 +1072,63 @@ new (function() {
 	ext.botMoved = function(bot,position){
 		var robot=findBot(bot);
 
-		if(robot.accelListenerOn == false){
-			robot.accelListenerOn = true;
-			robot.listeners.accelerometer.subscribe((function(message) {
-				if( robot.accelerometer ) {
-					
-						robot.listeners.update("accelerometer", message.roll + "#" + message.pitch + "#" + message.yaw + "#" + message.position);
+        if(connected){
+            if(robot.accelListenerOn == false){
+                robot.accelListenerOn = true;
+                robot.listeners.accelerometer.subscribe((function(message) {
+                    if( robot.accelerometer ) {
+                        
+                            robot.listeners.update("accelerometer", message.roll + "#" + message.pitch + "#" + message.yaw + "#" + message.position);
 
-						var position = message.position;
-						
-						if(robot.listeners.update("position", position)){
-							robot.accMoved(position);
-						}
-				}
-			}).bind(this));
-		}
+                            var position = message.position;
+                            
+                            if(robot.listeners.update("position", position)){
+                                robot.accMoved(position);
+                            }
+                    }
+                }).bind(this));
+            }
 
-		switch(position){
-		case 'left':
-			if (robot.currentPosition=='left' && robot.accelerometerChanged){
-				robot.accelerometerChanged=false;
-				return true;
-			}
-			break;
-		case 'right':
-			if (robot.currentPosition=='right' && robot.accelerometerChanged){
-				robot.accelerometerChanged=false;
-				return true;
-			}
-			break;
-		case 'forward':
-			if (robot.currentPosition=='forward' && robot.accelerometerChanged){
-				robot.accelerometerChanged=false;
-				return true;
-			}
-			break;
-		case 'backward':
-			if (robot.currentPosition=='backward' && robot.accelerometerChanged){
-				robot.accelerometerChanged=false;
-				return true;
-			}
-			break;
-		case 'standup':
-			if (robot.currentPosition=='standup' && robot.accelerometerChanged){
-				robot.accelerometerChanged=false;
-				return true;
-			}
-			break;
-		case 'facedown':
-			if (robot.currentPosition=='facedown' && robot.accelerometerChanged){
-				robot.accelerometerChanged=false;
-				return true;
-			}
-			break;
-		default: return false;
-		}
+            switch(position){
+            case 'left':
+                if (robot.currentPosition=='left' && robot.accelerometerChanged){
+                    robot.accelerometerChanged=false;
+                    return true;
+                }
+                break;
+            case 'right':
+                if (robot.currentPosition=='right' && robot.accelerometerChanged){
+                    robot.accelerometerChanged=false;
+                    return true;
+                }
+                break;
+            case 'forward':
+                if (robot.currentPosition=='forward' && robot.accelerometerChanged){
+                    robot.accelerometerChanged=false;
+                    return true;
+                }
+                break;
+            case 'backward':
+                if (robot.currentPosition=='backward' && robot.accelerometerChanged){
+                    robot.accelerometerChanged=false;
+                    return true;
+                }
+                break;
+            case 'standup':
+                if (robot.currentPosition=='standup' && robot.accelerometerChanged){
+                    robot.accelerometerChanged=false;
+                    return true;
+                }
+                break;
+            case 'facedown':
+                if (robot.currentPosition=='facedown' && robot.accelerometerChanged){
+                    robot.accelerometerChanged=false;
+                    return true;
+                }
+                break;
+            default: return false;
+            }
+        }
 	}
 	
 
@@ -1161,29 +1163,53 @@ new (function() {
 	ext.botHeard = function(bot,sentence){
 		var robot=findBot(bot);
 
-		if(robot.asrListenerOn == false){
-			robot.asrListenerOn = true;
-			robot.listeners.asr.subscribe((function(message) {
-				robot.listenedSentence=(message.data).toString();
-				robot.listened=true;
-			}).bind(this));
-		}
-		
-        if(robot != null){
-    		if(robot.listening && robot.listened){
-    			if((robot.listenedSentence).toLowerCase()==(sentence.toString()).toLowerCase()){
-    				robot.listened=false;
-    				return true;
-    			}
-    		}
-    		else
-    			return false;
+        if(connected){
+            if(robot.asrListenerOn == false){
+                robot.asrListenerOn = true;
+                robot.listeners.asr.subscribe((function(message) {
+                    robot.listenedSentence=(message.data).toString();
+                    robot.listened=true;
+                }).bind(this));
+            }
+            
+            if(robot != null){
+                if(robot.listening && robot.listened){
+                    if((robot.listenedSentence).toLowerCase()==(sentence.toString()).toLowerCase()){
+                        robot.listened=false;
+                        return true;
+                    }
+                }
+                else
+                    return false;
+            }
+            else return false;
         }
-        else return false;
 	}
 
     ext.botFace = function(bot,faces){
         var robot=findBot(bot);
+
+        if(connected){
+            if(robot.faceListenerOn == false){
+                robot.faceListenerOn = true;
+                robot.listeners.faceDetected.subscribe((function(message) {
+                    robot.faceListenedNumber=message.data;
+                    robot.faceListened=true;
+                }).bind(this));
+            }
+            
+            if(robot != null){
+                if(robot.faceListened){
+                    if(robot.faceListenedNumber == faces){
+                        robot.faceListened=false;
+                        return true;
+                    }
+                }
+                else
+                    return false;
+            }
+            else return false;
+        }
 
         if(robot.faceListenerOn == false){
             robot.faceListenerOn = true;
@@ -1209,111 +1235,121 @@ new (function() {
     ext.botQr = function(bot,menu,sentence){
         var robot=findBot(bot);
 
-        sentence = String(sentence);
+        if(connected){
 
-        if(robot!=null){
-        if(robot.qrListenerOn == false){
-            robot.qrListenerOn = true;
-            robot.listeners.qrDetected.subscribe((function(message) {
-                robot.qrListenedSentence=message.data;
-                robot.qrListened=true;
-            }).bind(this));
-        }
-        
-        if(robot.qrListened){
-            var list = false;
-            var splittedSentence = sentence.split(' ');
-            if(splittedSentence.length > 1){
-                list = true;
+            sentence = String(sentence);
+
+            if(robot!=null){
+            if(robot.qrListenerOn == false){
+                robot.qrListenerOn = true;
+                robot.listeners.qrDetected.subscribe((function(message) {
+                    robot.qrListenedSentence=message.data;
+                    robot.qrListened=true;
+                }).bind(this));
             }
-            /*if((robot.qrListenedSentence).toLowerCase() == sentence.toLowerCase()){
-                robot.qrListened=false;
-                return true;
-            }*/
-            if(menu=='gets'){
-                if((robot.qrListenedSentence).toLowerCase() == sentence.toLowerCase()){
+            
+            if(robot.qrListened){
+                var list = false;
+                var splittedSentence = sentence.split(' ');
+                if(splittedSentence.length > 1){
+                    list = true;
+                }
+                /*if((robot.qrListenedSentence).toLowerCase() == sentence.toLowerCase()){
                     robot.qrListened=false;
                     return true;
-                }
-            }
-            else{
-                if(!list){
-                    if((robot.qrListenedSentence).toLowerCase() != sentence.toLowerCase()){
+                }*/
+                if(menu=='gets'){
+                    if((robot.qrListenedSentence).toLowerCase() == sentence.toLowerCase()){
                         robot.qrListened=false;
                         return true;
                     }
                 }
                 else{
-                    var found = false;
-                    for(var i=0; i<splittedSentence.length; i++){
-                        if((robot.qrListenedSentence).toLowerCase() == splittedSentence[i].toLowerCase()){
-                            found = true;
+                    if(!list){
+                        if((robot.qrListenedSentence).toLowerCase() != sentence.toLowerCase()){
+                            robot.qrListened=false;
+                            return true;
                         }
                     }
-                    if(!found){
-                        robot.qrListened=false;
-                        return true;
+                    else{
+                        var found = false;
+                        for(var i=0; i<splittedSentence.length; i++){
+                            if((robot.qrListenedSentence).toLowerCase() == splittedSentence[i].toLowerCase()){
+                                found = true;
+                            }
+                        }
+                        if(!found){
+                            robot.qrListened=false;
+                            return true;
+                        }
                     }
                 }
             }
+            else
+                return false;
+            }
+            else return false;
+
         }
-        else
-            return false;
-        }
-        else return false;
     }
 
     ext.botEyesCover = function(bot,cover){
         var robot=findBot(bot);
 
-        if(robot.eyesCoverListenerOn == false){
-            robot.eyesCoverListenerOn = true;
-            robot.listeners.eyesCovered.subscribe((function(message) {
-                if(robot.listeners.update("eyesCover",message.data)){
-                    robot.eyesCoverListenedValue = message.data;
-                    robot.eyesCoverListened =true;
-                }
-            }).bind(this));
-        }
-        
-        if(robot != null){
-            if(robot.eyesCoverListened){
-                if(cover == 'covered'){
-                    if(robot.eyesCoverListenedValue){
-                        robot.eyesCoverListened = false;
-                        return true;
+        if(connected){
+            if(robot.eyesCoverListenerOn == false){
+                robot.eyesCoverListenerOn = true;
+                robot.listeners.eyesCovered.subscribe((function(message) {
+                    if(robot.listeners.update("eyesCover",message.data)){
+                        robot.eyesCoverListenedValue = message.data;
+                        robot.eyesCoverListened =true;
                     }
-                }
-                else{
-                    if(!robot.eyesCoverListenedValue){
-                        robot.eyesCoverListened = false;
-                        return true;
+                }).bind(this));
+            }
+            
+            if(robot != null){
+                if(robot.eyesCoverListened){
+                    if(cover == 'covered'){
+                        if(robot.eyesCoverListenedValue){
+                            robot.eyesCoverListened = false;
+                            return true;
+                        }
+                    }
+                    else{
+                        if(!robot.eyesCoverListenedValue){
+                            robot.eyesCoverListened = false;
+                            return true;
+                        }
                     }
                 }
             }
         }
+
     }
 
     ext.botRfid = function(bot,sentence){
         var robot=findBot(bot);
 
-        if(robot.rfidListenerOn == false){
-            robot.rfidListenerOn = true;
-            robot.listeners.rfidDetected.subscribe((function(message) {
-                robot.rfidListenedSentence=message.data;
-                robot.rfidListened=true;
-            }).bind(this));
-        }
-        
-        if(robot.rfidListened){
-            //if((robot.rfidListenedSentence).toLowerCase() == sentence.toLowerCase()){
-            if(robot.rfidListenedSentence == sentence){
-                robot.rfidListened=false;
-                return true;
+        if(connected){
+            if(robot.rfidListenerOn == false){
+                robot.rfidListenerOn = true;
+                robot.listeners.rfidDetected.subscribe((function(message) {
+                    robot.rfidListenedSentence=message.data;
+                    robot.rfidListened=true;
+                }).bind(this));
             }
+            
+            if(robot.rfidListened){
+                //if((robot.rfidListenedSentence).toLowerCase() == sentence.toLowerCase()){
+                if(robot.rfidListenedSentence == sentence){
+                    robot.rfidListened=false;
+                    return true;
+                }
+            }
+            else
+                return false;
         }
-        else
-            return false;
+
     }
 	
 	var scratchList = ['Not','Done'];
