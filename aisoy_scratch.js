@@ -426,15 +426,15 @@ new (function() {
 				aux=i;
                 var robot=findBot(bot);
                 if(robot != null){
-                    robot.accelerometer.unsubscribe();
-                    robot.touch.unsubscribe();
-                    robot.asr.unsubscribe();
-                    robot.faceDetected.unsubscribe();
-                    robot.qrDetected.unsubscribe();
-                    robot.eyesCovered.unsubscribe();
-                    robot.rfidDetected.unsubscribe();
-                    robot.ttsSdk.unsubscribe();
-                    robot.asrSdk.unsubscribe();
+                    robot.listeners.accelerometer.unsubscribe();
+                    robot.listeners.touch.unsubscribe();
+                    robot.listeners.asr.unsubscribe();
+                    robot.listeners.faceDetected.unsubscribe();
+                    robot.listeners.qrDetected.unsubscribe();
+                    robot.listeners.eyesCovered.unsubscribe();
+                    robot.listeners.rfidDetected.unsubscribe();
+                    robot.listeners.ttsSdk.unsubscribe();
+                    robot.listeners.asrSdk.unsubscribe();
                     robot.ros.close();
                 }
 
