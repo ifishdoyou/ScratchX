@@ -469,7 +469,7 @@ new (function() {
 			aux = new ROSBot(botAux,ipAux);
 			bots.push(aux);
             setTimeout(function(){
-                getSounds(botAux);, 500);
+                getSounds(botAux);}, 500);
 			
             
             /*setTimeout(function(){ 
