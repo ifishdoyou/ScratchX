@@ -421,6 +421,7 @@ new (function() {
 		var i;
 		var aux;
 
+        alert("Entra Primero");
 		for(i=0; i<bots.length; i++){
 			if(bots[i].name==bot){
 				aux=i;
