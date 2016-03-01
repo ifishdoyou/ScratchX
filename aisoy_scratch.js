@@ -91,7 +91,7 @@ new (function() {
 
 		// Event callbacks
 		this.ros.on('connection', function() {
-			this.connected = 1;
+			connected = 1;
 			alert('connected!');
 			//scratchAudioList = getSounds(this);
 			/*ls = getSounds(this.name);
@@ -101,12 +101,10 @@ new (function() {
 		});
 		this.ros.on('close', function(){
 			alert('closed!');
-            this.connected = -1;
 			deleteBot(this.name);
 		});
 		this.ros.on('error', function(){
 			alert('error!');
-            this.connected = -1;
 		});
 		
 		//SERVICES
