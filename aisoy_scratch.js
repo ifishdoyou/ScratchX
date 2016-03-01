@@ -421,13 +421,11 @@ new (function() {
 		var i;
 		var aux;
 
-        alert("Entra Primero");
 		for(i=0; i<bots.length; i++){
 			if(bots[i].name==bot){
 				aux=i;
                 var robot=findBot(bot);
                 if(robot != null){
-                    alert("Entra");
                     robot.listeners.accelerometer.unsubscribe();
                     robot.listeners.touch.unsubscribe();
                     robot.listeners.asr.unsubscribe();
@@ -437,9 +435,7 @@ new (function() {
                     robot.listeners.rfidDetected.unsubscribe();
                     robot.listeners.ttsSdk.unsubscribe();
                     robot.listeners.asrSdk.unsubscribe();
-                    alert("Entra2");
                     robot.ros.close();
-                    alert("Sale");
                 }
 
 				ScratchExtensions.unregister(bot);
