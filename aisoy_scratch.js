@@ -468,7 +468,10 @@ new (function() {
 		if(!found){
 			aux = new ROSBot(botAux,ipAux);
 			bots.push(aux);
-			getSounds(botAux);
+            setTimeout(function(){
+                getSounds(botAux);, 500);
+			
+            
             /*setTimeout(function(){ 
                 var robot=findBot(bot);
                 if(robot==null)
@@ -1023,44 +1026,46 @@ new (function() {
 	ext.botTouched = function(bot,side){
 		var robot=findBot(bot);
 	
-		if(robot.touchListenerOn == false){
-			robot.touchListenerOn = true;
-			robot.listeners.touch.subscribe((function(message) {
-				if( robot.touch ) {
-					
-					robot.listeners.update("touch", message.left + "#" + message.head + "#" + message.right);
-					var where = 0
+        if(connected){
+    		if(robot.touchListenerOn == false){
+    			robot.touchListenerOn = true;
+    			robot.listeners.touch.subscribe((function(message) {
+    				if( robot.touch ) {
+    					
+    					robot.listeners.update("touch", message.left + "#" + message.head + "#" + message.right);
+    					var where = 0
 
-					if(message.back_left) robot.touchedRight=true;
-					if(message.back_right) robot.touchedLeft=true;
-					if(message.head) robot.touchedHead=true;
-				}
-			}).bind(this));
-		}
+    					if(message.back_left) robot.touchedRight=true;
+    					if(message.back_right) robot.touchedLeft=true;
+    					if(message.head) robot.touchedHead=true;
+    				}
+    			}).bind(this));
+    		}
 
-		switch (side){
-			case 'head':
-				if(robot.touchedHead){
-					robot.touchedHead = false;
-					return true;
-				}
-				break;
-			case 'left':
-				if(robot.touchedLeft){
-					robot.touchedLeft = false;
-					return true;
-				}
-				break;
-			case 'right':
-				if(robot.touchedRight){
-					robot.touchedRight = false;
-					return true;
-				}
-				break;
-			default:
-				return false;
-				break;
-		}
+    		switch (side){
+    			case 'head':
+    				if(robot.touchedHead){
+    					robot.touchedHead = false;
+    					return true;
+    				}
+    				break;
+    			case 'left':
+    				if(robot.touchedLeft){
+    					robot.touchedLeft = false;
+    					return true;
+    				}
+    				break;
+    			case 'right':
+    				if(robot.touchedRight){
+    					robot.touchedRight = false;
+    					return true;
+    				}
+    				break;
+    			default:
+    				return false;
+    				break;
+    		}
+        }
 		
 	}
 	
