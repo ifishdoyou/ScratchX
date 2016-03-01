@@ -437,6 +437,8 @@ new (function() {
                 robot.rfidDetected.unsubscribe();
                 robot.ttsSdk.unsubscribe();
                 robot.asrSdk.unsubscribe();
+
+                robot.ros.close();
 				ScratchExtensions.unregister(bot);
 			}
 		}
