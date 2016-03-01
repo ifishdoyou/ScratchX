@@ -469,10 +469,10 @@ new (function() {
 			aux = new ROSBot(botAux,ipAux);
 			bots.push(aux);
 			getSounds(botAux);
-            setTimeout(function(){ 
+            /*setTimeout(function(){ 
                 var robot=findBot(bot);
                 if(robot==null)
-                    alert("Error Connecting. Websockets Error"); }, 5000);
+                    alert("Error Connecting. Websockets Error"); }, 5000);*/
             /*var robot=findBot(bot);
             while((robot.connected != 1) && (robot.connected != -1)){
             }
