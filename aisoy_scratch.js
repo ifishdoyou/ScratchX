@@ -81,7 +81,6 @@ new (function() {
         this.eyesCoverListenerOn = false;
         this.eyesCoverListened = false;
         this.eyesCoverListenedValue = null;
-        this.connected = 0;
 
 
 
