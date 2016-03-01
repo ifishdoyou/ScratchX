@@ -81,6 +81,7 @@ new (function() {
         this.eyesCoverListenerOn = false;
         this.eyesCoverListened = false;
         this.eyesCoverListenedValue = null;
+        this.connected = 0;
 
 
 
@@ -91,7 +92,7 @@ new (function() {
 
 		// Event callbacks
 		this.ros.on('connection', function() {
-			connected = 1;
+			this.connected = 1;
 			alert('connected!');
 			//scratchAudioList = getSounds(this);
 			/*ls = getSounds(this.name);
@@ -101,10 +102,12 @@ new (function() {
 		});
 		this.ros.on('close', function(){
 			alert('closed!');
+            this.connected = -1;
 			deleteBot(this.name);
 		});
 		this.ros.on('error', function(){
 			alert('error!');
+            this.connected = -1;
 		});
 		
 		//SERVICES
@@ -424,6 +427,16 @@ new (function() {
 		for(i=0; i<bots.length; i++){
 			if(bots[i].name==bot){
 				aux=i;
+                var robot=findBot(bot);
+                robot.accelerometer.unsubscribe();
+                robot.touch.unsubscribe();
+                robot.asr.unsubscribe();
+                robot.faceDetected.unsubscribe();
+                robot.qrDetected.unsubscribe();
+                robot.eyesCovered.unsubscribe();
+                robot.rfidDetected.unsubscribe();
+                robot.ttsSdk.unsubscribe();
+                robot.asrSdk.unsubscribe();
 				ScratchExtensions.unregister(bot);
 			}
 		}
@@ -454,16 +467,15 @@ new (function() {
 		if(!found){
 			aux = new ROSBot(botAux,ipAux);
 			bots.push(aux);
-			//if (aux.connected == 1 ) ext._getStatus();
-			/*ls = []
-			ls = getSounds(botAux);
-			setBlocks(botAux,ls);
-			ScratchExtensions.register(botAux, descriptor2, ext);*/
-			getSounds(botAux);
+			/*getSounds(botAux);
             setTimeout(function(){ 
                 var robot=findBot(bot);
                 if(robot==null)
-                    alert("Error Connecting. Websockets Error"); }, 5000);
+                    alert("Error Connecting. Websockets Error"); }, 5000);*/
+            var robot=findBot(bot);
+            while((robot.connected != 1) && (robot.connected != -1)){
+            }
+            getSounds(botAux);
 		}
 	}
 	
