@@ -467,15 +467,15 @@ new (function() {
 		if(!found){
 			aux = new ROSBot(botAux,ipAux);
 			bots.push(aux);
-			/*getSounds(botAux);
+			getSounds(botAux);
             setTimeout(function(){ 
                 var robot=findBot(bot);
                 if(robot==null)
-                    alert("Error Connecting. Websockets Error"); }, 5000);*/
-            var robot=findBot(bot);
+                    alert("Error Connecting. Websockets Error"); }, 5000);
+            /*var robot=findBot(bot);
             while((robot.connected != 1) && (robot.connected != -1)){
             }
-            getSounds(botAux);
+            getSounds(botAux);*/
 		}
 	}
 	
