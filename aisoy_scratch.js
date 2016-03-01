@@ -425,17 +425,19 @@ new (function() {
 			if(bots[i].name==bot){
 				aux=i;
                 var robot=findBot(bot);
-                robot.accelerometer.unsubscribe();
-                robot.touch.unsubscribe();
-                robot.asr.unsubscribe();
-                robot.faceDetected.unsubscribe();
-                robot.qrDetected.unsubscribe();
-                robot.eyesCovered.unsubscribe();
-                robot.rfidDetected.unsubscribe();
-                robot.ttsSdk.unsubscribe();
-                robot.asrSdk.unsubscribe();
+                if(robot != null){
+                    robot.accelerometer.unsubscribe();
+                    robot.touch.unsubscribe();
+                    robot.asr.unsubscribe();
+                    robot.faceDetected.unsubscribe();
+                    robot.qrDetected.unsubscribe();
+                    robot.eyesCovered.unsubscribe();
+                    robot.rfidDetected.unsubscribe();
+                    robot.ttsSdk.unsubscribe();
+                    robot.asrSdk.unsubscribe();
+                    robot.ros.close();
+                }
 
-                robot.ros.close();
 				ScratchExtensions.unregister(bot);
 			}
 		}
