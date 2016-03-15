@@ -1234,6 +1234,7 @@ new (function() {
 
     ext.botQr = function(bot,menu,sentence){
         var robot=findBot(bot);
+        alert(sentence);
 
         if(connected){
 
