@@ -1237,7 +1237,8 @@ new (function() {
 
         if(connected){
 
-            sentence = String(sentence);
+            //sentence = String(sentence);
+            sentence = sentence.toString();
 
             if(robot!=null){
             if(robot.qrListenerOn == false){
