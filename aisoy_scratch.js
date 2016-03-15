@@ -1251,10 +1251,10 @@ new (function() {
             
             if(robot.qrListened){
                 var list = false;
-                var splittedSentence = sentence.split(' ');
+                /*var splittedSentence = sentence.split(' ');
                 if(splittedSentence.length > 1){
                     list = true;
-                }
+                }*/
                 /*if((robot.qrListenedSentence).toLowerCase() == sentence.toLowerCase()){
                     robot.qrListened=false;
                     return true;
