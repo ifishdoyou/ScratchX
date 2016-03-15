@@ -1234,12 +1234,11 @@ new (function() {
 
     ext.botQr = function(bot,menu,sentence){
         var robot=findBot(bot);
-        alert(sentence);
 
         if(connected){
 
-            //sentence = String(sentence);
-            sentence = sentence.toString();
+            //var sentence2 = String(sentence);
+            var sentence2 = sentence.toString();
 
             if(robot!=null){
             if(robot.qrListenerOn == false){
@@ -1252,23 +1251,23 @@ new (function() {
             
             if(robot.qrListened){
                 var list = false;
-                /*var splittedSentence = sentence.split(' ');
+                var splittedSentence = sentence2.split(' ');
                 if(splittedSentence.length > 1){
                     list = true;
-                }*/
+                }
                 /*if((robot.qrListenedSentence).toLowerCase() == sentence.toLowerCase()){
                     robot.qrListened=false;
                     return true;
                 }*/
                 if(menu=='gets'){
-                    if((robot.qrListenedSentence).toLowerCase() == sentence.toLowerCase()){
+                    if((robot.qrListenedSentence).toLowerCase() == sentence2.toLowerCase()){
                         robot.qrListened=false;
                         return true;
                     }
                 }
                 else{
                     if(!list){
-                        if((robot.qrListenedSentence).toLowerCase() != sentence.toLowerCase()){
+                        if((robot.qrListenedSentence).toLowerCase() != sentence2.toLowerCase()){
                             robot.qrListened=false;
                             return true;
                         }
