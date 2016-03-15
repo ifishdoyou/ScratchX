@@ -1238,7 +1238,8 @@ new (function() {
         if(connected){
 
             //var sentence2 = String(sentence);
-            var sentence2 = sentence.toString();
+            sentence = sentence.toString();
+            
 
             if(robot!=null){
             if(robot.qrListenerOn == false){
@@ -1251,7 +1252,7 @@ new (function() {
             
             if(robot.qrListened){
                 var list = false;
-                var splittedSentence = sentence2.split(' ');
+                var splittedSentence = sentence.split(' ');
                 if(splittedSentence.length > 1){
                     list = true;
                 }
@@ -1260,14 +1261,14 @@ new (function() {
                     return true;
                 }*/
                 if(menu=='gets'){
-                    if((robot.qrListenedSentence).toLowerCase() == sentence2.toLowerCase()){
+                    if((robot.qrListenedSentence).toLowerCase() == sentence.toLowerCase()){
                         robot.qrListened=false;
                         return true;
                     }
                 }
                 else{
                     if(!list){
-                        if((robot.qrListenedSentence).toLowerCase() != sentence2.toLowerCase()){
+                        if((robot.qrListenedSentence).toLowerCase() != sentence.toLowerCase()){
                             robot.qrListened=false;
                             return true;
                         }
