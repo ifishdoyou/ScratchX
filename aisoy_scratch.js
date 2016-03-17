@@ -1585,7 +1585,7 @@ new (function() {
     	descriptor2 = {
 	        blocks: [
 				[' ', '[A] %s plays %m.soundList sound', 'playSound', name , ''],
-				[' ', '[A] %s plays %s of %s', 'playScratchSound', name, 'sound1', 'Sprite1'],
+				//[' ', '[A] %s plays %s of %s', 'playScratchSound', name, 'sound1', 'Sprite1'],
 				[' ', '[A] %s stops all sounds', 'stopAllSound', name , ''],
 				['w', '[A] %s moves forward %n seconds %m.velocity', 'moveForward', name, 1, 'medium'],
 				//['w', '[A] %s moves forward indefinitely %m.velocity %m.activate', 'moveForwardI', name, 'medium', 'off'],
