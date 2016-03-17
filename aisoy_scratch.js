@@ -1526,6 +1526,10 @@ new (function() {
 		}
 	}
 
+    ext.scSounds = function(bot,sound){
+        alert(sound);
+    }
+
 
 
     var descriptor = {
@@ -1596,6 +1600,7 @@ new (function() {
 				['w', '[A] %s rotates right %n seconds %m.velocity', 'rotateRight', name, 1, 'medium'],
 				//['w', '[A] %s rotates right indefinitely %m.velocity %m.activate', 'rotateRightI', name, 'medium', 'off'],
 				['w', '[A] %s stops', 'stopBot', name],
+                ['w', '[A] %s plays %m.sounds', 'scSounds', name, 'sound1']
 	        ],
 			menus: {
 				//soundList: scratchList
