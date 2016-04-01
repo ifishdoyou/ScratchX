@@ -81,6 +81,9 @@ new (function() {
         this.eyesCoverListenerOn = false;
         this.eyesCoverListened = false;
         this.eyesCoverListenedValue = null;
+        this.colorListenerOn = false;
+        this.colorListened = false;
+        this.colorListenedValue = null;
 
 
 
@@ -1353,6 +1356,32 @@ new (function() {
         }
 
     }
+
+    ext.botColorViewed = function(bot,sentence){
+        var robot=findBot(bot);
+
+        if(connected){
+            if(robot.colorListenerOn == false){
+                robot.colorListenerOn = true;
+                robot.listeners.color.subscribe((function(message) {
+                    robot.colorListenedValue=(message.data).toString();
+                    robot.colorListened=true;
+                }).bind(this));
+            }
+            
+            if(robot != null){
+                if(robot.colorListened){
+                    if((robot.listenedSentence).toLowerCase()==(sentence.toString()).toLowerCase()){
+                        robot.listened=false;
+                        return true;
+                    }
+                }
+                else
+                    return false;
+            }
+            else return false;
+        }
+    }
 	
 	var scratchList = ['Not','Done'];
 
@@ -1527,7 +1556,40 @@ new (function() {
 	}
 
     ext.scSounds = function(bot,sound){
-        alert(sound);
+        /*var robot = findBot(bot);
+
+        if(robot!=null){
+            //var msn = eval("(" + req.responseText + ")");
+            //para buscar en children y costumes hay que hacer una búsqueda para quedarte con el que corresponda
+            var msn = getScratchJson();
+            var childs = msn.children;
+            var i=0;
+            var index1 = 0;
+            var index2 = 0;
+            for(i=0; i<childs.length; i++){
+                if(childs[i].objName == sprite)
+                    index1 = i;
+            }
+
+            var costumes = childs[index1].sounds;
+            for(i=0; i<costumes.length; i++){
+                if(costumes[i].soundName == sound)
+                    index2 = i;
+            }
+
+            md5Code = msn.children[index1].sounds[index2].md5;
+
+            SoundUrl = "http://cdn.assets.scratch.mit.edu/internalapi/asset/"+ md5Code +"/get/";
+
+            var playSoundRequest =  new ROSLIB.ServiceRequest({
+                data: SoundUrl
+            });
+                        
+            robot.playSoundScratch.callService(playSoundRequest, function( result1 ){
+            });
+        }*/
+
+        alert()
     }
 
 
@@ -1564,6 +1626,7 @@ new (function() {
             //['h', '[E] when %s gets %s from qr', 'botQr', 'bot1', 'code'],
             ['h', '[E] when %s %m.qrMenu %s from qr', 'botQr', 'bot1','gets','code'],
             ['h', '[E] when %s gets %m.eyesCoverMenu its eyes', 'botEyesCover', 'bot1','covered'],
+            ['h', '[E] when %s detects %m.colorValues color', 'botColorViewed', 'bot1', 'red'],
             //['h', '[E] when %s gets %s from rfid', 'botRfid', 'bot1', 'code'],
         ],
 		menus: {
@@ -1581,7 +1644,8 @@ new (function() {
 			soundList: scratchList,
 			velocity: ['slow','medium','fast'],
             qrMenu: ['gets','does not get'],
-            eyesCoverMenu: ['covered','discovered']
+            eyesCoverMenu: ['covered','discovered'],
+            colorValues: ['red','green','blue','yellow']
 		},
     };
 
@@ -1600,7 +1664,7 @@ new (function() {
 				['w', '[A] %s rotates right %n seconds %m.velocity', 'rotateRight', name, 1, 'medium'],
 				//['w', '[A] %s rotates right indefinitely %m.velocity %m.activate', 'rotateRightI', name, 'medium', 'off'],
 				['w', '[A] %s stops', 'stopBot', name],
-                ['w', '[A] %s plays %m.sound', 'scSounds', name, 'sound1']
+                //['w', '[A] %s plays %m.sound', 'scSounds', name, 'sound1']
 	        ],
 			menus: {
 				//soundList: scratchList
