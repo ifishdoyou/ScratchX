@@ -376,6 +376,12 @@ new (function() {
 			name : '/airos5/asr/userSdk',
 			messageType : 'std_msgs/Int16'
 		});
+
+        this.colorDetected = new ROSLIB.Topic({
+            ros : bot.ros,
+            name : '/airos5/color_vision/detected',
+            messageType : 'std_msgs/String'
+        });
 		
 		
 		/*this.asr.subscribe((function(message) {
@@ -1357,13 +1363,13 @@ new (function() {
 
     }
 
-    ext.botColorViewed = function(bot,sentence){
+    ext.botColorViewed = function(bot,color){
         var robot=findBot(bot);
 
         if(connected){
             if(robot.colorListenerOn == false){
                 robot.colorListenerOn = true;
-                robot.listeners.color.subscribe((function(message) {
+                robot.listeners.colorDetected.subscribe((function(message) {
                     robot.colorListenedValue=(message.data).toString();
                     robot.colorListened=true;
                 }).bind(this));
@@ -1371,8 +1377,8 @@ new (function() {
             
             if(robot != null){
                 if(robot.colorListened){
-                    if((robot.listenedSentence).toLowerCase()==(sentence.toString()).toLowerCase()){
-                        robot.listened=false;
+                    if((robot.colorListenedValue).toLowerCase()==(color.toString()).toLowerCase()){
+                        robot.colorListened=false;
                         return true;
                     }
                 }
