@@ -716,11 +716,11 @@ new (function() {
 			
 			var request = new ROSLIB.ServiceRequest({
 				//emotion : state,
-                data : state,
+                data : state.toString(),
                 wait : true
 			});
 			
-			robot.setEmotion.callService(request, function(result1){
+			robot.setEmotion.callService(request, function(resp){
                 if(callback!=null)
                     callback();
 			});
