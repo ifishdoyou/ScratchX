@@ -211,8 +211,8 @@ new (function() {
 		
 		this.setEmotion = new ROSLIB.Service({
 			ros : this.ros,
-			name : '/airos5/performance/set_performance',
-			serviceType : 'airos_performance/set_performance'
+			name : '/airos5/performance/set_emotion',
+			serviceType : 'airos_performance/set_emotion'
 		})
 
 		this.getAudioListService = new ROSLIB.Service({
