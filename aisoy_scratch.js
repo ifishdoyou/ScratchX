@@ -706,7 +706,7 @@ new (function() {
 	}
 
 
-	ext.setEmotion = function(bot,emotion){
+	ext.setEmotion = function(bot,emotion,callback){
 		var robot=findBot(bot);
 		var state;
 
@@ -720,6 +720,8 @@ new (function() {
 			});
 			
 			robot.setEmotion.callService(request, function(result1){
+                if(callback!=null)
+                    callback();
 			});
 		}
 	}
@@ -1609,7 +1611,7 @@ new (function() {
 			['w', '[D] %s grammar = %s', 'setGrammar', 'bot1', 'list'],
 			['w', '[A] %s %m.asrMenu ASR recognition %m.blocking', 'startStopAsr', 'bot1', 'start', 'block'],
 			//['w', 'set %s to %m.states state %m.blocking', 'setEmotion', 'bot1', 'Normal', 'block'],
-			[' ', '[A] %s state is %m.states', 'setEmotion', 'bot1', 'Normal'],
+			['w', '[A] %s state is %m.states', 'setEmotion', 'bot1', 'Normal'],
 			['w', '[A] %s says %s %m.mouthMenu mouth', 'sayTTS', 'bot1', 'text to say', 'moving'],
 			//['w', '%s say %s without moving mouth %m.blocking', 'sayWithout', 'bot1','text to say', 'block'],
 			//['w', '%s say %s moving mouth %m.blocking', 'sayWith', 'bot1', 'text to say', 'block'],
