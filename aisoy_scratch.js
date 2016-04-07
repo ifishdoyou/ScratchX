@@ -716,7 +716,7 @@ new (function() {
 			
 			var request = new ROSLIB.ServiceRequest({
 				//emotion : state,
-                data : state.toString(),
+                data : (state.toString()).toLowerCase(),
                 wait : true
 			});
 			
