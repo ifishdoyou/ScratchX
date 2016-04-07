@@ -715,7 +715,8 @@ new (function() {
 			state = emotion;
 			
 			var request = new ROSLIB.ServiceRequest({
-				emotion : state
+				emotion : state,
+                wait : true
 			});
 			
 			robot.setEmotion.callService(request, function(result1){
