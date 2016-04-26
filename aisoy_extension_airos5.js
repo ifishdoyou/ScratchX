@@ -46,29 +46,29 @@ var CatHtsManFestivalVoice = "upc_ca_pau_hts";
 
 new (function() {
 
-	var ext = this;
-	var connected=0;
-	var bots = [];
-	var moving =false;
-	var adds = 0;
-	
-	function ROSBot(name, ip) {
-		this.ip = ip;
-		this.name = name;
-		this.accelerometer = true;
-		this.touch = true;
-		this.touchedHead = false;
-		this.touchedLeft = false;
-		this.touchedRight = false;
-		this.accelerometerChanged = false;
-		this.currentPosition = 'standup';
-		this.listened=false;
-		this.listenedSentence=null;
-		this.moving=false;
-		this.listening=true;
-		this.touchListenerOn = false;
-		this.accelListenerOn = false;
-		this.asrListenerOn =false;
+    var ext = this;
+    var connected=0;
+    var bots = [];
+    var moving =false;
+    var adds = 0;
+    
+    function ROSBot(name, ip) {
+        this.ip = ip;
+        this.name = name;
+        this.accelerometer = true;
+        this.touch = true;
+        this.touchedHead = false;
+        this.touchedLeft = false;
+        this.touchedRight = false;
+        this.accelerometerChanged = false;
+        this.currentPosition = 'standup';
+        this.listened=false;
+        this.listenedSentence=null;
+        this.moving=false;
+        this.listening=true;
+        this.touchListenerOn = false;
+        this.accelListenerOn = false;
+        this.asrListenerOn =false;
         this.faceListenerOn = false;
         this.faceListened = false;
         this.faceListenedNumber = 0;
@@ -81,160 +81,163 @@ new (function() {
         this.eyesCoverListenerOn = false;
         this.eyesCoverListened = false;
         this.eyesCoverListenedValue = null;
+        this.colorListenerOn = false;
+        this.colorListened = false;
+        this.colorListenedValue = null;
 
 
 
-		// Connecting to ROS
-		this.ros = new ROSLIB.Ros({
-			url : 'wss://' + ip + ':9090'
-		});
+        // Connecting to ROS
+        this.ros = new ROSLIB.Ros({
+            url : 'wss://' + ip + ':9090'
+        });
 
-		// Event callbacks
-		this.ros.on('connection', function() {
-			connected = 1;
-			alert('connected!');
-			//scratchAudioList = getSounds(this);
-			/*ls = getSounds(this.name);
-			alert(scratchAudioList);
-			setBlocks(name,scratchAudioList);
-			ScratchExtensions.register(name, descriptor2, ext);*/
-		});
-		this.ros.on('close', function(){
-			alert('closed!');
-			deleteBot(this.name);
-		});
-		this.ros.on('error', function(){
-			alert('error!');
-		});
-		
-		//SERVICES
-		this.moveHeadService = new ROSLIB.Service({
-			ros: this.ros,
-			name : '/airos5/servo/move',
-			serviceType : 'airos_servo/move_servo'
-		});
-			
-		this.sayService = new ROSLIB.Service({
-			ros : this.ros,
-			name : '/airos5/tts/say',
-			serviceType : 'airos_tts/say'
-		});
-					
-		this.setColor = new ROSLIB.Service({
-			ros : this.ros,
-			name : '/airos5/color/set_rgb',
-			serviceType : 'airos5_color/set_rgb'
-		});
-					
-		this.mouthPrint = new ROSLIB.Service({
-			ros : this.ros,
-			name : '/airos5/display/write',
-			serviceType : 'airos_display/write'
-		});
-					
-		this.mouthDraw = new ROSLIB.Service({
-			ros : this.ros,
-			name : '/airos5/display/draw_array',
-			serviceType : 'airos_mouth/draw_array'
-		});
+        // Event callbacks
+        this.ros.on('connection', function() {
+            connected = 1;
+            alert('connected!');
+            //scratchAudioList = getSounds(this);
+            /*ls = getSounds(this.name);
+            alert(scratchAudioList);
+            setBlocks(name,scratchAudioList);
+            ScratchExtensions.register(name, descriptor2, ext);*/
+        });
+        this.ros.on('close', function(){
+            alert('closed!');
+            deleteBot(this.name);
+        });
+        this.ros.on('error', function(){
+            alert('error!');
+        });
+        
+        //SERVICES
+        this.moveHeadService = new ROSLIB.Service({
+            ros: this.ros,
+            name : '/airos5/servo/move',
+            serviceType : 'airos_servo/move_servo'
+        });
+            
+        this.sayService = new ROSLIB.Service({
+            ros : this.ros,
+            name : '/airos5/tts/say',
+            serviceType : 'airos_tts/say'
+        });
+                    
+        this.setColor = new ROSLIB.Service({
+            ros : this.ros,
+            name : '/airos5/color/set_rgb',
+            serviceType : 'airos5_color/set_rgb'
+        });
+                    
+        this.mouthPrint = new ROSLIB.Service({
+            ros : this.ros,
+            name : '/airos5/display/write',
+            serviceType : 'airos_display/write'
+        });
+                    
+        this.mouthDraw = new ROSLIB.Service({
+            ros : this.ros,
+            name : '/airos5/display/draw_array',
+            serviceType : 'airos_mouth/draw_array'
+        });
 
-		this.mouthDrawImage = new ROSLIB.Service({
-			ros : this.ros,
-			name : '/airos5/display/draw',
-			serviceType : 'airos_mouth/draw'
-		});
-		
-		this.getLanguage = new ROSLIB.Service({
-			ros : this.ros,
-			name : '/airos5/tts/get_language',
-			serviceType : 'airos_tts/get_language'
-		})
+        this.mouthDrawImage = new ROSLIB.Service({
+            ros : this.ros,
+            name : '/airos5/display/draw',
+            serviceType : 'airos_mouth/draw'
+        });
+        
+        this.getLanguage = new ROSLIB.Service({
+            ros : this.ros,
+            name : '/airos5/tts/get_language',
+            serviceType : 'airos_tts/get_language'
+        })
 
-		this.getVoice = new ROSLIB.Service({
-			ros : this.ros,
-			name : '/airos5/tts/get_voice',
-			serviceType : 'airos_tts/get_voice'
-		})
+        this.getVoice = new ROSLIB.Service({
+            ros : this.ros,
+            name : '/airos5/tts/get_voice',
+            serviceType : 'airos_tts/get_voice'
+        })
 
-		this.setLanguageTTS = new ROSLIB.Service({
-			ros : this.ros,
-			name : '/airos5/tts/set_language',
-			serviceType : 'airos_tts/set_language'
-		})
+        this.setLanguageTTS = new ROSLIB.Service({
+            ros : this.ros,
+            name : '/airos5/tts/set_language',
+            serviceType : 'airos_tts/set_language'
+        })
 
-		this.setTTS = new ROSLIB.Service({
-			ros : this.ros,
-			name : '/airos5/tts/set_tts',
-			serviceType : 'airos_tts/set_tts'
-		})
+        this.setTTS = new ROSLIB.Service({
+            ros : this.ros,
+            name : '/airos5/tts/set_tts',
+            serviceType : 'airos_tts/set_tts'
+        })
 
-		this.setLanguageASR = new ROSLIB.Service({
-			ros : this.ros,
-			name : '/airos5/asr/set_language',
-			serviceType : 'airos_asr/set_language'
-		})
+        this.setLanguageASR = new ROSLIB.Service({
+            ros : this.ros,
+            name : '/airos5/asr/set_language',
+            serviceType : 'airos_asr/set_language'
+        })
 
-		this.checkGrammar = new ROSLIB.Service({
-			ros : this.ros,
-			name : '/airos5/asr/check_grammar',
-			serviceType : 'airos_asr/check_grammar'
-		})
+        this.checkGrammar = new ROSLIB.Service({
+            ros : this.ros,
+            name : '/airos5/asr/check_grammar',
+            serviceType : 'airos_asr/check_grammar'
+        })
 
-		this.onoffASR = new ROSLIB.Service({
-			ros : this.ros,
-			name : '/airos5/asr/set_mode',
-			serviceType : 'airos_asr/set_mode'
-		})
+        this.onoffASR = new ROSLIB.Service({
+            ros : this.ros,
+            name : '/airos5/asr/set_mode',
+            serviceType : 'airos_asr/set_mode'
+        })
 
-		this.setVoice = new ROSLIB.Service({
-			ros : this.ros,
-			name : '/airos5/tts/set_voice',
-			serviceType : 'airos_tts/set_voice'
-		})
+        this.setVoice = new ROSLIB.Service({
+            ros : this.ros,
+            name : '/airos5/tts/set_voice',
+            serviceType : 'airos_tts/set_voice'
+        })
 
-		this.setGrammar = new ROSLIB.Service({
-			ros : this.ros,
-			name : '/airos5/asr/set_grammar',
-			serviceType : 'airos_asr/set_grammar'
-		})
+        this.setGrammar = new ROSLIB.Service({
+            ros : this.ros,
+            name : '/airos5/asr/set_grammar',
+            serviceType : 'airos_asr/set_grammar'
+        })
 
-		this.move = new ROSLIB.Service({
-			ros : this.ros,
-			//name : '/botmobile/move',
-			//serviceType : 'botmobile/MoveBotmobile'
-			name : '/device/botmobile/move_time',
-			serviceType : 'botmobile/MoveTime'
-		})
-		
-		this.setEmotion = new ROSLIB.Service({
-			ros : this.ros,
-			name : '/airos5/performance/set_performance',
-			serviceType : 'airos_performance/set_performance'
-		})
+        this.move = new ROSLIB.Service({
+            ros : this.ros,
+            //name : '/botmobile/move',
+            //serviceType : 'botmobile/MoveBotmobile'
+            name : '/device/botmobile/move_time',
+            serviceType : 'botmobile/MoveTime'
+        })
+        
+        this.setEmotion = new ROSLIB.Service({
+            ros : this.ros,
+            name : '/airos5/performance/set_emotion',
+            serviceType : 'airos_performance/set_emotion'
+        })
 
-		this.getAudioListService = new ROSLIB.Service({
-			ros : this.ros,
-			name : '/airos5/audio/get_list_audio',
-			serviceType : 'audio/get_list_audio'
-		})
+        this.getAudioListService = new ROSLIB.Service({
+            ros : this.ros,
+            name : '/airos5/audio/get_list_audio',
+            serviceType : 'audio/get_list_audio'
+        })
 
-		this.playService = new ROSLIB.Service({
-			ros : this.ros,
-			name : '/airos5/audio/play',
-			serviceType : 'audio/play'
-		})
+        this.playService = new ROSLIB.Service({
+            ros : this.ros,
+            name : '/airos5/audio/play',
+            serviceType : 'audio/play'
+        })
 
-		this.playSoundScratch = new ROSLIB.Service({
-			ros : this.ros,
-			name : '/airos5/audio/play_file',
-			serviceType : 'audio/play_file'
-		})
-		
-		this.stopAllService = new ROSLIB.Service({
-			ros : this.ros,
-			name : '/airos5/audio/stop_all',
-			serviceType : 'audio/stop_all'
-		})
+        this.playSoundScratch = new ROSLIB.Service({
+            ros : this.ros,
+            name : '/airos5/audio/play_file',
+            serviceType : 'audio/play_file'
+        })
+        
+        this.stopAllService = new ROSLIB.Service({
+            ros : this.ros,
+            name : '/airos5/audio/stop_all',
+            serviceType : 'audio/stop_all'
+        })
 
         this.restoreVolumeService = new ROSLIB.Service({
             ros : this.ros,
@@ -253,90 +256,90 @@ new (function() {
             name : '/app/minecraft/write',
             serviceType : 'minecraft/write'
         })
-		
-		
-		// Listeners and services
-		this.listeners = new Listeners(this)
-		//this.services = new Services(this)
-	};
+        
+        
+        // Listeners and services
+        this.listeners = new Listeners(this)
+        //this.services = new Services(this)
+    };
 
-	ROSBot.prototype.initialState=function(){
-		this.accelerometer = true;
-		this.touch = true;
-		this.touchedHead = false;
-		this.touchedLeft = false;
-		this.touchedRight = false;
-		this.accelerometerChanged = false;
-		this.currentPosition = 'standup';
-		this.listened=false;
-		this.listenedSentence=null;
-		this.moving=false;
-		this.listening=true;
-		this.touchListenerOn = false;
-		this.accelListenerOn = false;
-		this.asrListenerOn =false;
-	}
-	
-	ROSBot.prototype.TOUCH_MASK={
-		LEFT:1,
-		HEAD:2,
-		RIGHT:4
-	}
-	
-	/*ROSBot.prototype.touched = function(where){
-		if(where & this.TOUCH_MASK.LEFT) {
-			this.touchedLeft=true;
-		} 
-		if(where & this.TOUCH_MASK.RIGHT) {
-			this.touchedRight=true;
-		} 
-		if(where & this.TOUCH_MASK.HEAD) {
-			this.touchedHead=true;
-		} 
-	}*/
+    ROSBot.prototype.initialState=function(){
+        this.accelerometer = true;
+        this.touch = true;
+        this.touchedHead = false;
+        this.touchedLeft = false;
+        this.touchedRight = false;
+        this.accelerometerChanged = false;
+        this.currentPosition = 'standup';
+        this.listened=false;
+        this.listenedSentence=null;
+        this.moving=false;
+        this.listening=true;
+        this.touchListenerOn = false;
+        this.accelListenerOn = false;
+        this.asrListenerOn =false;
+    }
+    
+    ROSBot.prototype.TOUCH_MASK={
+        LEFT:1,
+        HEAD:2,
+        RIGHT:4
+    }
+    
+    /*ROSBot.prototype.touched = function(where){
+        if(where & this.TOUCH_MASK.LEFT) {
+            this.touchedLeft=true;
+        } 
+        if(where & this.TOUCH_MASK.RIGHT) {
+            this.touchedRight=true;
+        } 
+        if(where & this.TOUCH_MASK.HEAD) {
+            this.touchedHead=true;
+        } 
+    }*/
 
-	ROSBot.prototype.touched = function(message){
-		if(message.right) this.touchedRight=true;
-		if(message.left) this.touchedLeft=true;
-		if(message.head) this.touchedHead=true;
-	}
-	
-	ROSBot.prototype.accMoved = function(position){
-		this.accelerometerChanged=true;
-		this.currentPosition=position;
-	}
-	
-	Listeners.prototype.update = function(listener, value) {
-		changed = false
-		if(! listener in this.state || this.state[listener] != value) {
-			changed = true
+    ROSBot.prototype.touched = function(message){
+        if(message.right) this.touchedRight=true;
+        if(message.left) this.touchedLeft=true;
+        if(message.head) this.touchedHead=true;
+    }
+    
+    ROSBot.prototype.accMoved = function(position){
+        this.accelerometerChanged=true;
+        this.currentPosition=position;
+    }
+    
+    Listeners.prototype.update = function(listener, value) {
+        changed = false
+        if(! listener in this.state || this.state[listener] != value) {
+            changed = true
 
-			this.state[listener] = value;
-		}
+            this.state[listener] = value;
+        }
 
-		return changed
-	}
-	
-	function Listeners(bot) {
-		this.state = []
+        return changed
+    }
+    
+    function Listeners(bot) {
+        this.state = []
 
-		this.accelerometer = new ROSLIB.Topic({
-			ros : bot.ros,
-			name : '/airos5/accel/data',
-			messageType : 'airos_msgs/Accelerometer'
-		});
-		
-		this.touch = new ROSLIB.Topic({
-			ros : bot.ros,
-			name : '/airos5/touch/data',
-			messageType : 'airos_msgs/Touch'
-		});
-		
-		this.asr = new ROSLIB.Topic({
-			ros : bot.ros,
-			name : '/airos5/asr/recognition',
-			messageType : 'std_msgs/String'
-		});
+        this.accelerometer = new ROSLIB.Topic({
+            ros : bot.ros,
+            name : '/airos5/accel/data',
+            messageType : 'airos_msgs/Accelerometer'
+        });
+        
+        this.touch = new ROSLIB.Topic({
+            ros : bot.ros,
+            name : '/airos5/touch/data',
+            messageType : 'airos_msgs/Touch'
+        });
+        
+        this.asr = new ROSLIB.Topic({
+            ros : bot.ros,
+            name : '/airos5/asr/recognition',
+            messageType : 'std_msgs/String'
+        });
 
         this.faceDetected = new ROSLIB.Topic({
             ros : bot.ros,
@@ -361,127 +364,149 @@ new (function() {
             name : '/airos4/rfid/id',
             messageType : 'std_msgs/String'
         });
-		
-		this.ttsSdk = new ROSLIB.Topic({
-			ros : bot.ros,
-			name : '/airos5/tts/userSdk',
-			messageType : 'std_msgs/Int16'
-		});
-		
-		this.asrSdk = new ROSLIB.Topic({
-			ros : bot.ros,
-			name : '/airos5/asr/userSdk',
-			messageType : 'std_msgs/Int16'
-		});
-		
-		
-		/*this.asr.subscribe((function(message) {
-			bot.listenedSentence=(message.data).toString();
-			bot.listened=true;
-		}).bind(this));*/
+        
+        this.ttsSdk = new ROSLIB.Topic({
+            ros : bot.ros,
+            name : '/airos5/tts/userSdk',
+            messageType : 'std_msgs/Int16'
+        });
+        
+        this.asrSdk = new ROSLIB.Topic({
+            ros : bot.ros,
+            name : '/airos5/asr/userSdk',
+            messageType : 'std_msgs/Int16'
+        });
 
-	}
-	
+        this.colorDetected = new ROSLIB.Topic({
+            ros : bot.ros,
+            name : '/airos5/color_vision/detected',
+            messageType : 'std_msgs/String'
+        });
+        
+        
+        /*this.asr.subscribe((function(message) {
+            bot.listenedSentence=(message.data).toString();
+            bot.listened=true;
+        }).bind(this));*/
 
-	function getDegrees(num){
-		var max = 0.984;
-		var min = -0.984;
-		var maxD = 79.86;
-		var res=-1;
+    }
+    
 
-		if(num >= 0){
-			if(num <= max)
-				res = ((num*maxD)/max);
-			else
-				res = 90;
-		}
-		else{
-			if(num >= min)
-				res = ((num*maxD)/min)*-1;
-			else
-				res = -90;
-		}
-		return res;
-	}
+    function getDegrees(num){
+        var max = 0.984;
+        var min = -0.984;
+        var maxD = 79.86;
+        var res=-1;
+
+        if(num >= 0){
+            if(num <= max)
+                res = ((num*maxD)/max);
+            else
+                res = 90;
+        }
+        else{
+            if(num >= min)
+                res = ((num*maxD)/min)*-1;
+            else
+                res = -90;
+        }
+        return res;
+    }
 
 
-	function findBot(bot){
-		var robot=null;
-		var exit=false;
-		for(var i=0; i<bots.length && !exit; i++){
-			if(bots[i].name==bot){
-				robot=bots[i];
-				exit=true;
-			}
-		}
-		return robot;
-	}
-	
-	function deleteBot(bot){
-		var i;
-		var aux;
+    function findBot(bot){
+        var robot=null;
+        var exit=false;
+        for(var i=0; i<bots.length && !exit; i++){
+            if(bots[i].name==bot){
+                robot=bots[i];
+                exit=true;
+            }
+        }
+        return robot;
+    }
+    
+    function deleteBot(bot){
+        var i;
+        var aux;
 
-		for(i=0; i<bots.length; i++){
-			if(bots[i].name==bot){
-				aux=i;
-				ScratchExtensions.unregister(bot);
-			}
-		}
-		
-		bots.splice(aux,1);
-		if(i==1) connected=0;
-		return i;
-	}
+        for(i=0; i<bots.length; i++){
+            if(bots[i].name==bot){
+                aux=i;
+                var robot=findBot(bot);
+                if(robot != null){
+                    robot.listeners.accelerometer.unsubscribe();
+                    robot.listeners.touch.unsubscribe();
+                    robot.listeners.asr.unsubscribe();
+                    robot.listeners.faceDetected.unsubscribe();
+                    robot.listeners.qrDetected.unsubscribe();
+                    robot.listeners.eyesCovered.unsubscribe();
+                    robot.listeners.rfidDetected.unsubscribe();
+                    robot.listeners.ttsSdk.unsubscribe();
+                    robot.listeners.asrSdk.unsubscribe();
+                    robot.ros.close();
+                }
+
+                ScratchExtensions.unregister(bot);
+            }
+        }
+        
+        bots.splice(aux,1);
+        if(i==1) connected=0;
+        return i;
+    }
 
     ext._getStatus = function() {
-		if(connected==0) 
-			return {status: 1, msg: 'Desconectado'};
-		else
-			return {status: 2, msg: 'Conectado'};
+        if(connected==0) 
+            return {status: 1, msg: 'Desconectado'};
+        else
+            return {status: 2, msg: 'Conectado'};
     }
-	
-	ext.connectBot = function(bot,ip){
-		var aux;
-		var found=false;
-		var botAux=bot.toString();
-		var ipAux=ip.toString();
-		for(var i=0; i<bots.length && !found; i++){
-			if((bots[i].name==botAux) || (bots[i].ip==ipAux)){
-				found=true;
-			}
-		}
-			
-		if(!found){
-			aux = new ROSBot(botAux,ipAux);
-			bots.push(aux);
-			//if (aux.connected == 1 ) ext._getStatus();
-			/*ls = []
-			ls = getSounds(botAux);
-			setBlocks(botAux,ls);
-			ScratchExtensions.register(botAux, descriptor2, ext);*/
-			getSounds(botAux);
-            setTimeout(function(){ 
+    
+    ext.connectBot = function(bot,ip){
+        var aux;
+        var found=false;
+        var botAux=bot.toString();
+        var ipAux=ip.toString();
+        for(var i=0; i<bots.length && !found; i++){
+            if((bots[i].name==botAux) || (bots[i].ip==ipAux)){
+                found=true;
+            }
+        }
+            
+        if(!found){
+            aux = new ROSBot(botAux,ipAux);
+            bots.push(aux);
+            setTimeout(function(){
+                getSounds(botAux);}, 500);
+            
+            
+            /*setTimeout(function(){ 
                 var robot=findBot(bot);
                 if(robot==null)
-                    alert("Error Connecting. Websockets Error"); }, 5000);
-		}
-	}
-	
+                    alert("Error Connecting. Websockets Error"); }, 5000);*/
+            /*var robot=findBot(bot);
+            while((robot.connected != 1) && (robot.connected != -1)){
+            }
+            getSounds(botAux);*/
+        }
+    }
+    
 
-	ext.disconnectBot = function(bot){
-		deleteBot(bot);
-	}
+    ext.disconnectBot = function(bot){
+        deleteBot(bot);
+    }
 
-	ext.setLanguage = function(bot,select,language,voice,callback){
-		var index;
-		var indexv4;
-		var lang;
-		var langv4;
-		var request;
-		var robot=findBot(bot);
-		var typeTTS="pico";
-		
-		if(robot!=null){
+    ext.setLanguage = function(bot,select,language,voice,callback){
+        var index;
+        var indexv4;
+        var lang;
+        var langv4;
+        var request;
+        var robot=findBot(bot);
+        var typeTTS="pico";
+        
+        if(robot!=null){
 
             var reqVolume = new ROSLIB.ServiceRequest({
             });
@@ -489,7 +514,7 @@ new (function() {
             robot.restoreVolumeService.callService(reqVolume, function(result1){
             });
 
-			switch (language){
+            switch (language){
                 case 'English':
                     lang=0;
                     langv4="en";
@@ -516,656 +541,688 @@ new (function() {
                     break;
                 default: index=0;break;     
             }
-			
-			var req;
-				if(lang == 2 || lang == 3) {
-					//Espeak
-					req = new ROSLIB.Message({
-						data : 3
-					})
-				} else {
-					//Festival
-					req = new ROSLIB.Message({
-						data : 0
-					})
-			}
-			
-			request = new ROSLIB.ServiceRequest({
-					//language : lang
-					language : langv4
-			});
+            
+            var req;
+                if(lang == 2 || lang == 3) {
+                    //Espeak
+                    req = new ROSLIB.Message({
+                        data : 3
+                    })
+                } else {
+                    //Festival
+                    req = new ROSLIB.Message({
+                        data : 0
+                    })
+            }
+            
+            request = new ROSLIB.ServiceRequest({
+                    //language : lang
+                    language : langv4
+            });
 
-			requestSetTTS = new ROSLIB.ServiceRequest({
-				//language : lang
-				ttsType : typeTTS
-			});
-			
-			if(select == 'all'){
-				robot.listeners.ttsSdk.publish(req);
+            requestSetTTS = new ROSLIB.ServiceRequest({
+                //language : lang
+                ttsType : typeTTS
+            });
+            
+            if(select == 'all'){
+                robot.listeners.ttsSdk.publish(req);
 
-				robot.setTTS.callService(requestSetTTS, (function(result){
-					robot.setLanguageTTS.callService(request, (function(result1) {
-						robot.listeners.asrSdk.publish(req);
+                robot.setTTS.callService(requestSetTTS, (function(result){
+                    robot.setLanguageTTS.callService(request, (function(result1) {
+                        robot.listeners.asrSdk.publish(req);
 
-						robot.setLanguageASR.callService(request, (function(result) {
-							request = new ROSLIB.ServiceRequest({
-								voice :  indexv4
-							})
+                        robot.setLanguageASR.callService(request, (function(result) {
+                            request = new ROSLIB.ServiceRequest({
+                                voice :  indexv4
+                            })
 
 
                             if((typeTTS != 'pico') && (typeTTS != 'espeak')){
                                 robot.setVoice.callService(request, (function(response) {
                                 }));
                             }
-							callback();
-						}).bind($(this)));
-					}).bind($(this)));
-				}).bind($(this)));
-			}
-			else if(select == 'TTS'){
-				robot.listeners.ttsSdk.publish(req);
+                            callback();
+                        }).bind($(this)));
+                    }).bind($(this)));
+                }).bind($(this)));
+            }
+            else if(select == 'TTS'){
+                robot.listeners.ttsSdk.publish(req);
 
-				robot.setTTS.callService(requestSetTTS, (function(result){
-					robot.setLanguageTTS.callService(request, (function(result1) {
-						request = new ROSLIB.ServiceRequest({
-							//voice :  index
-							voice : indexv4
-						});
+                robot.setTTS.callService(requestSetTTS, (function(result){
+                    robot.setLanguageTTS.callService(request, (function(result1) {
+                        request = new ROSLIB.ServiceRequest({
+                            //voice :  index
+                            voice : indexv4
+                        });
 
                         if((typeTTS != 'pico') && (typeTTS != 'espeak')){
-    						robot.setVoice.callService(request, (function(response) {
-    						}));
+                            robot.setVoice.callService(request, (function(response) {
+                            }));
                         }
-								
-						callback();
-					}).bind($(this)));
-				}).bind($(this)));
+                                
+                        callback();
+                    }).bind($(this)));
+                }).bind($(this)));
 
-			}
-			else{
-				//robot.listeners.asrSdk.publish(req);
-				robot.setLanguageASR.callService(request, (function(result) {
-					callback();
-				}).bind($(this)));
-			}
-		}
-	}
-
-
-	function makeList(list){
-		var newWord=false;
-		var comp=false;
-		var word='';
-		var newList=[];
-
-		for(var i=0; i<list.length; i++){
-			if(!newWord){
-				if(list[i] == '"'){
-					newWord=true;
-					comp=true;
-				}
-				else{
-					if(list[i] != ' '){
-						newWord=true;
-						word+=list[i];
-					}
-				}
-			}
-			else{
-				if((list[i]=='"' && comp && newWord) || (list[i]==' ' && !comp && newWord) || (i==(list.length-1) && newWord)){
-					if(i==list.length-1 && !comp)
-						word+=list[i];
-					newWord=false;
-					comp=false;
-					newList.push(word);
-					word="";
-				}
-				else{
-					if(list[i] == ' '){
-						word+='_';
-					}
-					else
-						word+=list[i];
-				}
-			}
-		}
-
-		return newList;
-	}
-	
-	ext.setGrammar = function(bot,list,callback){
-		var robot=findBot(bot);
-
-		var lAux=makeList(list);
-		
-		var gram = lAux.join('|').toString();
-		
-		if(robot!=null){
-			if(robot.asrListenerOn == false){
-				robot.asrListenerOn = true;
-				robot.listeners.asr.subscribe((function(message) {
-					robot.listenedSentence=(message.data).toString();
-					robot.listened=true;
-				}).bind(this));
-			}
-
-			var request = new ROSLIB.ServiceRequest({
-				grammar : gram
-			});
-
-			/*setTimeout(function(){
-				invalids = ""
-				robot.checkGrammar.callService(request, function(result){
-					is_correct=result.correct;
-					if(!result.correct){
-						for(i=0;i<(result.invalid_words).length;i++){
-							if (i<(result.invalid_words).length-1){
-								invalids+=(result.invalid_words)[i]+", ";
-							}
-							else{
-								invalids+=(result.invalid_words)[i];
-							}
-						}
-						alert("The next words are not at our ASR dictionary: "+invalids);
-						if(callback!=null)
-							callback();
-					}
-				});
-			},2000);*/
-		
-			robot.setGrammar.callService(request, function(result1){
-				if(callback!=null)
-					callback();
-			});
-		}
-	}
+            }
+            else{
+                //robot.listeners.asrSdk.publish(req);
+                robot.setLanguageASR.callService(request, (function(result) {
+                    callback();
+                }).bind($(this)));
+            }
+        }
+    }
 
 
-	ext.setEmotion = function(bot,emotion){
-		var robot=findBot(bot);
-		var state;
+    function makeList(list){
+        var newWord=false;
+        var comp=false;
+        var word='';
+        var newList=[];
 
-		if(robot!=null){
+        for(var i=0; i<list.length; i++){
+            if(!newWord){
+                if(list[i] == '"'){
+                    newWord=true;
+                    comp=true;
+                }
+                else{
+                    if(list[i] != ' '){
+                        newWord=true;
+                        word+=list[i];
+                    }
+                }
+            }
+            else{
+                if((list[i]=='"' && comp && newWord) || (list[i]==' ' && !comp && newWord) || (i==(list.length-1) && newWord)){
+                    if(i==list.length-1 && !comp)
+                        word+=list[i];
+                    newWord=false;
+                    comp=false;
+                    newList.push(word);
+                    word="";
+                }
+                else{
+                    if(list[i] == ' '){
+                        word+='_';
+                    }
+                    else
+                        word+=list[i];
+                }
+            }
+        }
 
-			state = emotion;
-			
-			var request = new ROSLIB.ServiceRequest({
-				emotion : state
-			});
-			
-			robot.setEmotion.callService(request, function(result1){
-			});
-		}
-	}
-	
+        return newList;
+    }
+    
+    ext.setGrammar = function(bot,list,callback){
+        var robot=findBot(bot);
 
-	function botSay(bot,text,moving,callback){
-		var robot=findBot(bot);
-		
-		if(robot!=null){
-			var sayRequest =  new ROSLIB.ServiceRequest({
-				sentence : text,
-				moveMouth : moving
-			});
-					
-			robot.sayService.callService(sayRequest, function( result1 ){
-				if(callback!=null)
-					callback();
-			});
-		}
-	}
-	
+        var lAux=makeList(list);
+        
+        var gram = lAux.join('|').toString();
+        
+        if(robot!=null){
+            if(robot.asrListenerOn == false){
+                robot.asrListenerOn = true;
+                robot.listeners.asr.subscribe((function(message) {
+                    robot.listenedSentence=(message.data).toString();
+                    robot.listened=true;
+                }).bind(this));
+            }
 
-	ext.sayTTS = function(bot,text,moving,callback){
-		//if(block == 'block'){
-			if(moving == 'moving')
-				botSay(bot,text.toString(),true,callback);
-			else
-				botSay(bot,text.toString(),false,callback);
-		/*}
-		else{
-			if(moving == 'moving')
-				botSay(bot,text.toString(),true,null);
-			else
-				botSay(bot,text.toString(),false,null);
-			callback();
-		}*/
-	}
-	
-	ext.sayList = function(bot,list,moving,block,callback){
-		var m=false;
-		if(list!=null){
-			//var auxList = list.split(". ");
-			var auxList = makeList(list);
-			var len = auxList.length;
-			for(var i=0; i<len; i++){
-				auxList[i] = auxList[i].replace(/_/g,' ');
-			}
-			var num = Math.floor(0 + (1+(len-1)-0)*Math.random());
-			var text=auxList[num];
-			
-			if(moving=='with') m=true;
-			
-			if(block=='block') botSay(bot,text,m,callback);
-			else{
-				botSay(bot,text.toString(),m,null);
-				callback();
-			}
-		}
-	}
+            var request = new ROSLIB.ServiceRequest({
+                grammar : gram
+            });
 
-	function rangeLimiter(min,max,num){
-		var result=num;
+            /*setTimeout(function(){
+                invalids = ""
+                robot.checkGrammar.callService(request, function(result){
+                    is_correct=result.correct;
+                    if(!result.correct){
+                        for(i=0;i<(result.invalid_words).length;i++){
+                            if (i<(result.invalid_words).length-1){
+                                invalids+=(result.invalid_words)[i]+", ";
+                            }
+                            else{
+                                invalids+=(result.invalid_words)[i];
+                            }
+                        }
+                        alert("The next words are not at our ASR dictionary: "+invalids);
+                        if(callback!=null)
+                            callback();
+                    }
+                });
+            },2000);*/
+        
+            robot.setGrammar.callService(request, function(result1){
+                if(callback!=null)
+                    callback();
+            });
+        }
+    }
 
-		if(num<min){
-			result=min;
-		}
-		else if(num>max){
-			result=max;
-		}
 
-		return result;
-	}
+    ext.setEmotion = function(bot,emotion,callback){
+        var robot=findBot(bot);
+        var state;
 
-	function moveServo(bot,position,time,servo,callback){
-		var robot=findBot(bot);
+        if(robot!=null){
 
-		
-		if(robot!=null && !isNaN(position) && position!=null){
-			var timeAux;
+            state = emotion;
+            
+            var request = new ROSLIB.ServiceRequest({
+                //emotion : state,
+                data : (state.toString()).toLowerCase(),
+                wait : true
+            });
+            
+            robot.setEmotion.callService(request, function(resp){
+                if(callback!=null)
+                    callback();
+            });
+        }
+    }
+    
 
-			if(time=='slow'){
-				timeAux = 1.8;
-			}
-			else if(time=='medium'){
-				timeAux = 0.8;
-			}
-			else{
-				//if(servo == 0)
-				timeAux = 0.1;
-				//else
-					//timeAux = 0;
-			}
+    function botSay(bot,text,moving,callback){
+        var robot=findBot(bot);
+        
+        if(robot!=null){
+            var sayRequest =  new ROSLIB.ServiceRequest({
+                sentence : text,
+                moveMouth : moving
+            });
+                    
+            robot.sayService.callService(sayRequest, function( result1 ){
+                if(callback!=null)
+                    callback();
+            });
+        }
+    }
+    
 
-			position = rangeLimiter(0,1,position);
+    ext.sayTTS = function(bot,text,moving,callback){
+        //if(block == 'block'){
+            if(moving == 'moving')
+                botSay(bot,text.toString(),true,callback);
+            else
+                botSay(bot,text.toString(),false,callback);
+        /*}
+        else{
+            if(moving == 'moving')
+                botSay(bot,text.toString(),true,null);
+            else
+                botSay(bot,text.toString(),false,null);
+            callback();
+        }*/
+    }
+    
+    ext.sayList = function(bot,list,moving,block,callback){
+        var m=false;
+        if(list!=null){
+            //var auxList = list.split(". ");
+            var auxList = makeList(list);
+            var len = auxList.length;
+            for(var i=0; i<len; i++){
+                auxList[i] = auxList[i].replace(/_/g,' ');
+            }
+            var num = Math.floor(0 + (1+(len-1)-0)*Math.random());
+            var text=auxList[num];
+            
+            if(moving=='with') m=true;
+            
+            if(block=='block') botSay(bot,text,m,callback);
+            else{
+                botSay(bot,text.toString(),m,null);
+                callback();
+            }
+        }
+    }
 
-			var waitAux = false;
-			if(callback==null)
-				waitAux = true;
+    function rangeLimiter(min,max,num){
+        var result=num;
+
+        if(num<min){
+            result=min;
+        }
+        else if(num>max){
+            result=max;
+        }
+
+        return result;
+    }
+
+    function moveServo(bot,position,time,servo,callback){
+        var robot=findBot(bot);
+
+        
+        if(robot!=null && !isNaN(position) && position!=null){
+            var timeAux;
+
+            if(time=='slow'){
+                timeAux = 1.8;
+            }
+            else if(time=='medium'){
+                timeAux = 0.8;
+            }
+            else{
+                //if(servo == 0)
+                timeAux = 0.1;
+                //else
+                    //timeAux = 0;
+            }
+
+            position = rangeLimiter(0,1,position);
+
+            var waitAux = false;
+            if(callback==null)
+                waitAux = true;
 
             var typeAux = "absolute";
 
-			// The request is an object used to send the parameters to the service
-			var request = new ROSLIB.ServiceRequest({
-				position : parseFloat(position),
-				servo: servo,
-				time : timeAux,
-				type : typeAux.toString(),
-				async : waitAux
-			});
-			
-			// And now we use the method callService, this is where themagic happens.
-			robot.moveHeadService.callService(request, function( result ){
-				//if(callback!=null)
-					callback();
-			});
-		}
-		/*else{
-			callback();
-		}*/
-	}
-	
-	ext.moveHeadH = function(bot,position,time,callback){
-		//if(block == 'block')
-			moveServo(bot,position,time,'head_h',callback);
-		/*else{
-			moveServo(bot,position,time,'head',null);
-			callback();
-		}*/
-	}
-	
-	ext.moveHeadV = function(bot,position,time,callback){
-		//if(block == 'block')
-			moveServo(bot,position,time,'head_v',callback);
-		/*else{
-			moveServo(bot,position,time,1,null);
-			callback();
-		}*/
-	}
-	
-	ext.moveEyebrows = function(bot,position,time,callback){
-		//if(block == 'block')
-			moveServo(bot,position,time,'eyebrows',callback);
-		/*else{
-			moveServo(bot,position,time,'eyebrows',null);
-			callback();
-		}*/
-	}
-	
-	ext.moveEyes = function(bot,position,time,callback){
-		//if(block == 'block')
-			moveServo(bot,position,time,'eyelids',callback);
-		/*else{
-			moveServo(bot,position,time,'eyelids',null);
-			callback();
-		}*/
-	}
-	
-	function moveBot(bot,time,direction,veloc,callback){
-		var robot = findBot(bot);
-		var auxVel = 0;
+            // The request is an object used to send the parameters to the service
+            var request = new ROSLIB.ServiceRequest({
+                position : parseFloat(position),
+                servo: servo,
+                time : timeAux,
+                type : typeAux.toString(),
+                async : waitAux
+            });
+            
+            // And now we use the method callService, this is where themagic happens.
+            robot.moveHeadService.callService(request, function( result ){
+                //if(callback!=null)
+                    callback();
+            });
+        }
+        /*else{
+            callback();
+        }*/
+    }
+    
+    ext.moveHeadH = function(bot,position,time,callback){
+        //if(block == 'block')
+            moveServo(bot,position,time,'head_h',callback);
+        /*else{
+            moveServo(bot,position,time,'head',null);
+            callback();
+        }*/
+    }
+    
+    ext.moveHeadV = function(bot,position,time,callback){
+        //if(block == 'block')
+            moveServo(bot,position,time,'head_v',callback);
+        /*else{
+            moveServo(bot,position,time,1,null);
+            callback();
+        }*/
+    }
+    
+    ext.moveEyebrows = function(bot,position,time,callback){
+        //if(block == 'block')
+            moveServo(bot,position,time,'eyebrows',callback);
+        /*else{
+            moveServo(bot,position,time,'eyebrows',null);
+            callback();
+        }*/
+    }
+    
+    ext.moveEyes = function(bot,position,time,callback){
+        //if(block == 'block')
+            moveServo(bot,position,time,'eyelids',callback);
+        /*else{
+            moveServo(bot,position,time,'eyelids',null);
+            callback();
+        }*/
+    }
+    
+    function moveBot(bot,time,direction,veloc,callback){
+        var robot = findBot(bot);
+        var auxVel = 0;
 
-		if(veloc == 'slow'){
-			auxVel = 10;
-		}
-		else if(veloc == 'medium'){
-			auxVel = 60;
-		}
-		else
-			auxVel = 100;
+        if(veloc == 'slow'){
+            auxVel = 10;
+        }
+        else if(veloc == 'medium'){
+            auxVel = 60;
+        }
+        else
+            auxVel = 100;
 
-		var waitAux = true;
-		/*if(block != 'block')
-			waitAux = false;*/
+        var waitAux = true;
+        /*if(block != 'block')
+            waitAux = false;*/
 
-		if(robot!=null){
-			if(!moving || (direction=='stop' && moving)){
-				var request = new ROSLIB.ServiceRequest({
-					cmd : direction,
-					time : time,
-					vel : auxVel,
-					wait : waitAux
-				});
-					
-				robot.move.callService(request, function( result ){
-					if(time == -2)	robot.moving = true;
-					if(direction == 'stop') robot.moving = false;
+        if(robot!=null){
+            if(!moving || (direction=='stop' && moving)){
+                var request = new ROSLIB.ServiceRequest({
+                    cmd : direction,
+                    time : time,
+                    vel : auxVel,
+                    wait : waitAux
+                });
+                    
+                robot.move.callService(request, function( result ){
+                    if(time == -2)  robot.moving = true;
+                    if(direction == 'stop') robot.moving = false;
                     //if(direction == 'stop') robot.moving = false;
-					//if(callback != null)
-					callback();
-				});
-			}
-		}
+                    //if(callback != null)
+                    callback();
+                });
+            }
+        }
 
-		/*if(block != 'block')
-			callback();*/
-	}
-	
-	ext.moveForward = function(bot,time,veloc,callback){
-		moveBot(bot,time,'forward',veloc,callback);
-		//moveBot(bot,time,'forward',veloc,block,callback);
-	}
-	
-	ext.moveForwardI = function(bot,veloc,activate,callback){
-		if(activate == 'on') moveBot(bot,-2,'forward',veloc,callback);
-		//if(activate == 'on') moveBot(bot,-2,'forward',veloc,block,callback);
-		else callback();
-	}
-	
-	ext.moveBackwards = function(bot,time,veloc,callback){
-		moveBot(bot,time,'backward',veloc,callback);
-		//moveBot(bot,time,'backward',veloc,block,callback);
-	}
-	
-	ext.moveBackwardsI = function(bot,veloc,activate,callback){
-		if(activate == 'on') moveBot(bot,-2,'backward',veloc,callback);
-		//if(activate == 'on') moveBot(bot,-2,'backward',veloc,block,callback);
-		else callback();
-	}
-	
-	ext.rotateLeft = function(bot,time,veloc,callback){
-		moveBot(bot,time,'right',veloc,callback);
-		//moveBot(bot,time,'left',veloc,block,callback);
-        //moveBot(bot,time,'right',veloc,block,callback);
-	}
-	
-	ext.rotateLeftI = function(bot,veloc,activate,callback){
-		if(activate == 'on') moveBot(bot,-2,'right',veloc,callback);
-        //if(activate == 'on') moveBot(bot,-2,'left',veloc,block,callback);
-		//if(activate == 'on') moveBot(bot,-2,'right',veloc,block,callback);
-		else callback();
-	}
-	
-	ext.rotateRight  = function(bot,time,veloc,callback){
-		moveBot(bot,time,'left',veloc,callback);
+        /*if(block != 'block')
+            callback();*/
+    }
+    
+    ext.moveForward = function(bot,time,veloc,callback){
+        moveBot(bot,time,'forward',veloc,callback);
+        //moveBot(bot,time,'forward',veloc,block,callback);
+    }
+    
+    ext.moveForwardI = function(bot,veloc,activate,callback){
+        if(activate == 'on') moveBot(bot,-2,'forward',veloc,callback);
+        //if(activate == 'on') moveBot(bot,-2,'forward',veloc,block,callback);
+        else callback();
+    }
+    
+    ext.moveBackwards = function(bot,time,veloc,callback){
+        moveBot(bot,time,'backward',veloc,callback);
+        //moveBot(bot,time,'backward',veloc,block,callback);
+    }
+    
+    ext.moveBackwardsI = function(bot,veloc,activate,callback){
+        if(activate == 'on') moveBot(bot,-2,'backward',veloc,callback);
+        //if(activate == 'on') moveBot(bot,-2,'backward',veloc,block,callback);
+        else callback();
+    }
+    
+    ext.rotateLeft = function(bot,time,veloc,callback){
+        moveBot(bot,time,'right',veloc,callback);
         //moveBot(bot,time,'left',veloc,block,callback);
-		//moveBot(bot,time,'left',veloc,block,callback);
-	}
-	
-	ext.rotateRightI  = function(bot,veloc,activate,callback){
-		if(activate == 'on') moveBot(bot,-2,'left',veloc,callback);
-		//if(activate == 'on') moveBot(bot,-2,'right',veloc,block,callback);
+        //moveBot(bot,time,'right',veloc,block,callback);
+    }
+    
+    ext.rotateLeftI = function(bot,veloc,activate,callback){
+        if(activate == 'on') moveBot(bot,-2,'right',veloc,callback);
         //if(activate == 'on') moveBot(bot,-2,'left',veloc,block,callback);
-		else callback();
-	}
-	
-	ext.stopBot = function(bot,callback){
-		moveBot(bot,1,'stop',30,callback);
-		//moveBot(bot,1,'stop',30,block,callback);
-	}
-	
-	ext.hearth = function(bot,r,g,b,time,callback){
-		var robot=findBot(bot);
+        //if(activate == 'on') moveBot(bot,-2,'right',veloc,block,callback);
+        else callback();
+    }
+    
+    ext.rotateRight  = function(bot,time,veloc,callback){
+        moveBot(bot,time,'left',veloc,callback);
+        //moveBot(bot,time,'left',veloc,block,callback);
+        //moveBot(bot,time,'left',veloc,block,callback);
+    }
+    
+    ext.rotateRightI  = function(bot,veloc,activate,callback){
+        if(activate == 'on') moveBot(bot,-2,'left',veloc,callback);
+        //if(activate == 'on') moveBot(bot,-2,'right',veloc,block,callback);
+        //if(activate == 'on') moveBot(bot,-2,'left',veloc,block,callback);
+        else callback();
+    }
+    
+    ext.stopBot = function(bot,callback){
+        moveBot(bot,1,'stop',30,callback);
+        //moveBot(bot,1,'stop',30,block,callback);
+    }
+    
+    ext.hearth = function(bot,r,g,b,time,callback){
+        var robot=findBot(bot);
 
         r=parseInt(r);
         g=parseInt(g);
         b=parseInt(b);
-		
-		if(robot!=null && !isNaN(r) && !isNaN(g) && !isNaN(b) && r!=null && g!=null && b!=null){
-			// LED
+        
+        if(robot!=null && !isNaN(r) && !isNaN(g) && !isNaN(b) && r!=null && g!=null && b!=null){
+            // LED
 
-			r = rangeLimiter(0,255,r);
-			g = rangeLimiter(0,255,g);
-			b = rangeLimiter(0,255,b);
+            r = rangeLimiter(0,255,r);
+            g = rangeLimiter(0,255,g);
+            b = rangeLimiter(0,255,b);
 
-			var colorRequest = new ROSLIB.ServiceRequest({
-				red : r,
-				green : g,
-				blue : b,
-				time : time,
+            var colorRequest = new ROSLIB.ServiceRequest({
+                red : r,
+                green : g,
+                blue : b,
+                time : time,
                 wait : true,
-			});
-			
-			robot.setColor.callService(colorRequest, function( result1 ){
+            });
+            
+            robot.setColor.callService(colorRequest, function( result1 ){
                 callback();
-			});
-		}
-	}
-	
-	ext.mouthDraw = function(bot,picture,block,callback){
-		var robot=findBot(bot);
-		
-		if(robot!=null){
-			//Mouth draw - Draw a image in the LedMatrix by a 70 char string 
-			var drawRequest = new ROSLIB.ServiceRequest({
-				picture : picture
-			}); 				
-			
-			robot.mouthDraw.callService(drawRequest, function( result1 ) {
-				if(block == 'block')
-					callback();
-			});
-		}
-		
-		if(block != 'block')
-			callback();
-	}
-	
-	ext.mouthWrite = function(bot,text,callback){
-		var robot=findBot(bot);
-		
-		if(robot!=null){
-			// Mouth print - print a given text in the LedMatrix
-			var printRequest = new ROSLIB.ServiceRequest({
-				sentence : text.toString(),
-				speed : 1
-			});
-			
-			robot.mouthPrint.callService(printRequest, function( result1 ){
-					callback();
-			});
-		}
-	}
-	
-	ext.botTouched = function(bot,side){
-		var robot=findBot(bot);
-	
-		if(robot.touchListenerOn == false){
-			robot.touchListenerOn = true;
-			robot.listeners.touch.subscribe((function(message) {
-				if( robot.touch ) {
-					
-					robot.listeners.update("touch", message.left + "#" + message.head + "#" + message.right);
-					var where = 0
-
-					if(message.back_left) robot.touchedRight=true;
-					if(message.back_right) robot.touchedLeft=true;
-					if(message.head) robot.touchedHead=true;
-				}
-			}).bind(this));
-		}
-
-		switch (side){
-			case 'head':
-				if(robot.touchedHead){
-					robot.touchedHead = false;
-					return true;
-				}
-				break;
-			case 'left':
-				if(robot.touchedLeft){
-					robot.touchedLeft = false;
-					return true;
-				}
-				break;
-			case 'right':
-				if(robot.touchedRight){
-					robot.touchedRight = false;
-					return true;
-				}
-				break;
-			default:
-				return false;
-				break;
-		}
-		
-	}
-	
-	ext.botMoved = function(bot,position){
-		var robot=findBot(bot);
-
-		if(robot.accelListenerOn == false){
-			robot.accelListenerOn = true;
-			robot.listeners.accelerometer.subscribe((function(message) {
-				if( robot.accelerometer ) {
-					
-						robot.listeners.update("accelerometer", message.roll + "#" + message.pitch + "#" + message.yaw + "#" + message.position);
-
-						var position = message.position;
-						
-						if(robot.listeners.update("position", position)){
-							robot.accMoved(position);
-						}
-				}
-			}).bind(this));
-		}
-
-		switch(position){
-		case 'left':
-			if (robot.currentPosition=='left' && robot.accelerometerChanged){
-				robot.accelerometerChanged=false;
-				return true;
-			}
-			break;
-		case 'right':
-			if (robot.currentPosition=='right' && robot.accelerometerChanged){
-				robot.accelerometerChanged=false;
-				return true;
-			}
-			break;
-		case 'forward':
-			if (robot.currentPosition=='forward' && robot.accelerometerChanged){
-				robot.accelerometerChanged=false;
-				return true;
-			}
-			break;
-		case 'backward':
-			if (robot.currentPosition=='backward' && robot.accelerometerChanged){
-				robot.accelerometerChanged=false;
-				return true;
-			}
-			break;
-		case 'standup':
-			if (robot.currentPosition=='standup' && robot.accelerometerChanged){
-				robot.accelerometerChanged=false;
-				return true;
-			}
-			break;
-		case 'facedown':
-			if (robot.currentPosition=='facedown' && robot.accelerometerChanged){
-				robot.accelerometerChanged=false;
-				return true;
-			}
-			break;
-		default: return false;
-		}
-	}
-	
-
-	ext.startStopAsr = function(bot,option,block,callback){
-		var robot=findBot(bot);
-
-		if(robot!=null){
-			var mode;
-			if(option=="start"){
-				mode = "enable";
-				robot.listening = true;
-			}
-			else{
-				mode = "disable";
-				robot.listening = false;
-			}
-
-			var request = new ROSLIB.ServiceRequest({
-				data : mode,
-			});
-
-			robot.onoffASR.callService(request, function( result1 ){
-				if(block == 'block')
-					callback();
-			});
-		}
-
-		if(block != 'block')
-			callback();
-	}
-
-	ext.botHeard = function(bot,sentence){
-		var robot=findBot(bot);
-
-		if(robot.asrListenerOn == false){
-			robot.asrListenerOn = true;
-			robot.listeners.asr.subscribe((function(message) {
-				robot.listenedSentence=(message.data).toString();
-				robot.listened=true;
-			}).bind(this));
-		}
-		
-        if(robot != null){
-    		if(robot.listening && robot.listened){
-    			if((robot.listenedSentence).toLowerCase()==(sentence.toString()).toLowerCase()){
-    				robot.listened=false;
-    				return true;
-    			}
-    		}
-    		else
-    			return false;
+            });
         }
-        else return false;
-	}
+    }
+    
+    ext.mouthDraw = function(bot,picture,block,callback){
+        var robot=findBot(bot);
+        
+        if(robot!=null){
+            //Mouth draw - Draw a image in the LedMatrix by a 70 char string 
+            var drawRequest = new ROSLIB.ServiceRequest({
+                picture : picture
+            });                 
+            
+            robot.mouthDraw.callService(drawRequest, function( result1 ) {
+                if(block == 'block')
+                    callback();
+            });
+        }
+        
+        if(block != 'block')
+            callback();
+    }
+    
+    ext.mouthWrite = function(bot,text,callback){
+        var robot=findBot(bot);
+        
+        if(robot!=null){
+            // Mouth print - print a given text in the LedMatrix
+            var printRequest = new ROSLIB.ServiceRequest({
+                sentence : text.toString(),
+                speed : 1
+            });
+            
+            robot.mouthPrint.callService(printRequest, function( result1 ){
+                    callback();
+            });
+        }
+    }
+    
+    ext.botTouched = function(bot,side){
+        var robot=findBot(bot);
+    
+        if(connected){
+            if(robot.touchListenerOn == false){
+                robot.touchListenerOn = true;
+                robot.listeners.touch.subscribe((function(message) {
+                    if( robot.touch ) {
+                        
+                        robot.listeners.update("touch", message.left + "#" + message.head + "#" + message.right);
+                        var where = 0
+
+                        if(message.back_left) robot.touchedRight=true;
+                        if(message.back_right) robot.touchedLeft=true;
+                        if(message.head) robot.touchedHead=true;
+                    }
+                }).bind(this));
+            }
+
+            switch (side){
+                case 'head':
+                    if(robot.touchedHead){
+                        robot.touchedHead = false;
+                        return true;
+                    }
+                    break;
+                case 'left':
+                    if(robot.touchedLeft){
+                        robot.touchedLeft = false;
+                        return true;
+                    }
+                    break;
+                case 'right':
+                    if(robot.touchedRight){
+                        robot.touchedRight = false;
+                        return true;
+                    }
+                    break;
+                default:
+                    return false;
+                    break;
+            }
+        }
+        
+    }
+    
+    ext.botMoved = function(bot,position){
+        var robot=findBot(bot);
+
+        if(connected){
+            if(robot.accelListenerOn == false){
+                robot.accelListenerOn = true;
+                robot.listeners.accelerometer.subscribe((function(message) {
+                    if( robot.accelerometer ) {
+                        
+                            robot.listeners.update("accelerometer", message.roll + "#" + message.pitch + "#" + message.yaw + "#" + message.position);
+
+                            var position = message.position;
+                            
+                            if(robot.listeners.update("position", position)){
+                                robot.accMoved(position);
+                            }
+                    }
+                }).bind(this));
+            }
+
+            switch(position){
+            case 'left':
+                if (robot.currentPosition=='left' && robot.accelerometerChanged){
+                    robot.accelerometerChanged=false;
+                    return true;
+                }
+                break;
+            case 'right':
+                if (robot.currentPosition=='right' && robot.accelerometerChanged){
+                    robot.accelerometerChanged=false;
+                    return true;
+                }
+                break;
+            case 'forward':
+                if (robot.currentPosition=='forward' && robot.accelerometerChanged){
+                    robot.accelerometerChanged=false;
+                    return true;
+                }
+                break;
+            case 'backward':
+                if (robot.currentPosition=='backward' && robot.accelerometerChanged){
+                    robot.accelerometerChanged=false;
+                    return true;
+                }
+                break;
+            case 'standup':
+                if (robot.currentPosition=='standup' && robot.accelerometerChanged){
+                    robot.accelerometerChanged=false;
+                    return true;
+                }
+                break;
+            case 'facedown':
+                if (robot.currentPosition=='facedown' && robot.accelerometerChanged){
+                    robot.accelerometerChanged=false;
+                    return true;
+                }
+                break;
+            default: return false;
+            }
+        }
+    }
+    
+
+    ext.startStopAsr = function(bot,option,block,callback){
+        var robot=findBot(bot);
+
+        if(robot!=null){
+            var mode;
+            if(option=="start"){
+                mode = "enable";
+                robot.listening = true;
+            }
+            else{
+                mode = "disable";
+                robot.listening = false;
+            }
+
+            var request = new ROSLIB.ServiceRequest({
+                data : mode,
+            });
+
+            robot.onoffASR.callService(request, function( result1 ){
+                if(block == 'block')
+                    callback();
+            });
+        }
+
+        if(block != 'block')
+            callback();
+    }
+
+    ext.botHeard = function(bot,sentence){
+        var robot=findBot(bot);
+
+        if(connected){
+            if(robot.asrListenerOn == false){
+                robot.asrListenerOn = true;
+                robot.listeners.asr.subscribe((function(message) {
+                    robot.listenedSentence=(message.data).toString();
+                    robot.listened=true;
+                }).bind(this));
+            }
+            
+            if(robot != null){
+                if(robot.listening && robot.listened){
+                    if((robot.listenedSentence).toLowerCase()==(sentence.toString()).toLowerCase()){
+                        robot.listened=false;
+                        return true;
+                    }
+                }
+                else
+                    return false;
+            }
+            else return false;
+        }
+    }
 
     ext.botFace = function(bot,faces){
         var robot=findBot(bot);
+
+        if(connected){
+            if(robot.faceListenerOn == false){
+                robot.faceListenerOn = true;
+                robot.listeners.faceDetected.subscribe((function(message) {
+                    robot.faceListenedNumber=message.data;
+                    robot.faceListened=true;
+                }).bind(this));
+            }
+            
+            if(robot != null){
+                if(robot.faceListened){
+                    if(robot.faceListenedNumber == faces){
+                        robot.faceListened=false;
+                        return true;
+                    }
+                }
+                else
+                    return false;
+            }
+            else return false;
+        }
 
         if(robot.faceListenerOn == false){
             robot.faceListenerOn = true;
@@ -1191,373 +1248,442 @@ new (function() {
     ext.botQr = function(bot,menu,sentence){
         var robot=findBot(bot);
 
-        sentence = String(sentence);
+        if(connected){
 
-        if(robot!=null){
-        if(robot.qrListenerOn == false){
-            robot.qrListenerOn = true;
-            robot.listeners.qrDetected.subscribe((function(message) {
-                robot.qrListenedSentence=message.data;
-                robot.qrListened=true;
-            }).bind(this));
-        }
-        
-        if(robot.qrListened){
-            var list = false;
-            var splittedSentence = sentence.split(' ');
-            if(splittedSentence.length > 1){
-                list = true;
+            //var sentence2 = String(sentence)
+            
+
+            if(robot!=null){
+            if(robot.qrListenerOn == false){
+                robot.qrListenerOn = true;
+                robot.listeners.qrDetected.subscribe((function(message) {
+                    robot.qrListenedSentence=message.data;
+                    robot.qrListened=true;
+                }).bind(this));
             }
-            /*if((robot.qrListenedSentence).toLowerCase() == sentence.toLowerCase()){
-                robot.qrListened=false;
-                return true;
-            }*/
-            if(menu=='gets'){
-                if((robot.qrListenedSentence).toLowerCase() == sentence.toLowerCase()){
+            
+            if(robot.qrListened){
+                //sentence = sentence.toString();
+                var list = false;
+                var splittedSentence = sentence.toString().split(' ');
+                if(splittedSentence.length > 1){
+                    list = true;
+                }
+                /*if((robot.qrListenedSentence).toLowerCase() == sentence.toLowerCase()){
                     robot.qrListened=false;
                     return true;
-                }
-            }
-            else{
-                if(!list){
-                    if((robot.qrListenedSentence).toLowerCase() != sentence.toLowerCase()){
+                }*/
+                if(menu=='gets'){
+                    if((robot.qrListenedSentence).toLowerCase() == sentence.toString().toLowerCase()){
                         robot.qrListened=false;
                         return true;
                     }
                 }
                 else{
-                    var found = false;
-                    for(var i=0; i<splittedSentence.length; i++){
-                        if((robot.qrListenedSentence).toLowerCase() == splittedSentence[i].toLowerCase()){
-                            found = true;
+                    if(!list){
+                        if((robot.qrListenedSentence).toLowerCase() != sentence.toString().toLowerCase()){
+                            robot.qrListened=false;
+                            return true;
                         }
                     }
-                    if(!found){
-                        robot.qrListened=false;
-                        return true;
+                    else{
+                        var found = false;
+                        for(var i=0; i<splittedSentence.length; i++){
+                            if((robot.qrListenedSentence).toLowerCase() == splittedSentence[i].toLowerCase()){
+                                found = true;
+                            }
+                        }
+                        if(!found){
+                            robot.qrListened=false;
+                            return true;
+                        }
                     }
                 }
             }
+            else
+                return false;
+            }
+            else return false;
+
         }
-        else
-            return false;
-        }
-        else return false;
     }
 
     ext.botEyesCover = function(bot,cover){
         var robot=findBot(bot);
 
-        if(robot.eyesCoverListenerOn == false){
-            robot.eyesCoverListenerOn = true;
-            robot.listeners.eyesCovered.subscribe((function(message) {
-                if(robot.listeners.update("eyesCover",message.data)){
-                    robot.eyesCoverListenedValue = message.data;
-                    robot.eyesCoverListened =true;
-                }
-            }).bind(this));
-        }
-        
-        if(robot != null){
-            if(robot.eyesCoverListened){
-                if(cover == 'covered'){
-                    if(robot.eyesCoverListenedValue){
-                        robot.eyesCoverListened = false;
-                        return true;
+        if(connected){
+            if(robot.eyesCoverListenerOn == false){
+                robot.eyesCoverListenerOn = true;
+                robot.listeners.eyesCovered.subscribe((function(message) {
+                    if(robot.listeners.update("eyesCover",message.data)){
+                        robot.eyesCoverListenedValue = message.data;
+                        robot.eyesCoverListened =true;
                     }
-                }
-                else{
-                    if(!robot.eyesCoverListenedValue){
-                        robot.eyesCoverListened = false;
-                        return true;
+                }).bind(this));
+            }
+            
+            if(robot != null){
+                if(robot.eyesCoverListened){
+                    if(cover == 'covered'){
+                        if(robot.eyesCoverListenedValue){
+                            robot.eyesCoverListened = false;
+                            return true;
+                        }
+                    }
+                    else{
+                        if(!robot.eyesCoverListenedValue){
+                            robot.eyesCoverListened = false;
+                            return true;
+                        }
                     }
                 }
             }
         }
+
     }
 
     ext.botRfid = function(bot,sentence){
         var robot=findBot(bot);
 
-        if(robot.rfidListenerOn == false){
-            robot.rfidListenerOn = true;
-            robot.listeners.rfidDetected.subscribe((function(message) {
-                robot.rfidListenedSentence=message.data;
-                robot.rfidListened=true;
-            }).bind(this));
+        if(connected){
+            if(robot.rfidListenerOn == false){
+                robot.rfidListenerOn = true;
+                robot.listeners.rfidDetected.subscribe((function(message) {
+                    robot.rfidListenedSentence=message.data;
+                    robot.rfidListened=true;
+                }).bind(this));
+            }
+            
+            if(robot.rfidListened){
+                //if((robot.rfidListenedSentence).toLowerCase() == sentence.toLowerCase()){
+                if(robot.rfidListenedSentence == sentence){
+                    robot.rfidListened=false;
+                    return true;
+                }
+            }
+            else
+                return false;
+        }
+
+    }
+
+    ext.botColorViewed = function(bot,color){
+        var robot=findBot(bot);
+
+        if(connected){
+            if(robot.colorListenerOn == false){
+                robot.colorListenerOn = true;
+                robot.listeners.colorDetected.subscribe((function(message) {
+                    robot.colorListenedValue=(message.data).toString();
+                    robot.colorListened=true;
+                }).bind(this));
+            }
+            
+            if(robot != null){
+                if(robot.colorListened){
+                    if((robot.colorListenedValue).toLowerCase()==(color.toString()).toLowerCase()){
+                        robot.colorListened=false;
+                        return true;
+                    }
+                }
+                else
+                    return false;
+            }
+            else return false;
+        }
+    }
+    
+    var scratchList = ['Not','Done'];
+
+
+    ext.playSound = function(bot,sound){
+        var robot=findBot(bot);
+        
+        if(robot!=null){
+            var playRequest =  new ROSLIB.ServiceRequest({
+                filename : sound+"*"
+            });
+                    
+            robot.playService.callService(playRequest, function( result1 ){
+            });
         }
         
-        if(robot.rfidListened){
-            //if((robot.rfidListenedSentence).toLowerCase() == sentence.toLowerCase()){
-            if(robot.rfidListenedSentence == sentence){
-                robot.rfidListened=false;
-                return true;
+    }
+
+    
+    function getSounds(bot){
+        var robot=findBot(bot);
+        var reqList = [];
+        var sList = null;
+
+        if(robot!=null){
+            var req = new ROSLIB.ServiceRequest({
+                data : "*"
+            });
+
+            robot.getAudioListService.callService(req, function( result1 ){
+                    ls = result1.list;
+                    ls=ls.sort();
+                    setBlocks(bot,ls);
+                    ScratchExtensions.register(bot, descriptor2, ext);
+            });
+        }
+    }
+
+
+    ext.stopAllSound = function(bot){
+        var robot=findBot(bot);
+        
+        if(robot!=null){
+            var stopAllRequest =  new ROSLIB.ServiceRequest({
+            });
+                    
+            robot.stopAllService.callService(stopAllRequest, function( result1 ){
+            });
+        }
+    }
+
+    ext.mouthDrawImage = function(bot,costume,sprite,callback){
+        var robot=findBot(bot);
+
+        if (window.XMLHttpRequest && robot!=null)
+        {// code for IE7+, Firefox, Chrome, Opera, Safari
+            req=new XMLHttpRequest();
+
+            //OBTAIN THE PROJECT ID
+            thisURL = document.URL;
+            splittedURL = thisURL.split('/');
+            projectID = splittedURL[splittedURL.length-2];
+            //alert(projectID);
+
+            //req.open("GET","http://projects.scratch.mit.edu/internalapi/project/37321876/get/",false);
+            req.open("GET","http://projects.scratch.mit.edu/internalapi/project/"+ projectID +"/get/",false);
+            req.send(null);
+
+            if(req.status == 200){
+                //alert(req.responseText);
+
+                //OBTAIN THE MD5 OF COSTUME TO SHOW
+                var msn = eval("(" + req.responseText + ")");
+                //para buscar en children y costumes hay que hacer una búsqueda para quedarte con el que corresponda
+                var childs = msn.children;
+                var i=0;
+                var index1 = 0;
+                var index2 = 0;
+                for(i=0; i<childs.length; i++){
+                    if(childs[i].objName == sprite)
+                        index1 = i;
+                }
+
+                var costumes = childs[index1].costumes;
+                for(i=0; i<costumes.length; i++){
+                    if(costumes[i].costumeName == costume)
+                        index2 = i;
+                }
+
+                md5Code = msn.children[index1].costumes[index2].baseLayerMD5;
+                //alert(md5Code);
+
+                extMd5 = md5Code.split('.');
+                //if(!md5Code.endsWith('svg')){
+                if(extMd5[(extMd5.length)-1] != 'svg'){
+                    ImageUrl = "http://cdn.assets.scratch.mit.edu/internalapi/asset/"+ md5Code +"/get/";
+
+                    //alert(ImageUrl);
+
+                    var drawImageRequest =  new ROSLIB.ServiceRequest({
+                        file: ImageUrl
+                    });
+                            
+                    robot.mouthDrawImage.callService(drawImageRequest, function( result1 ){
+
+                    });
+                }
             }
         }
-        else
-            return false;
+
+        callback();
     }
-	
-	var scratchList = ['Not','Done'];
 
+    function getScratchJson(){
+        if (window.XMLHttpRequest)
+        {// code for IE7+, Firefox, Chrome, Opera, Safari
+            req=new XMLHttpRequest();
 
-	ext.playSound = function(bot,sound){
-		var robot=findBot(bot);
-		
-		if(robot!=null){
-			var playRequest =  new ROSLIB.ServiceRequest({
-				filename : sound+"*"
-			});
-					
-			robot.playService.callService(playRequest, function( result1 ){
-			});
-		}
-		
-	}
+            //OBTAIN THE PROJECT ID
+            thisURL = document.URL;
+            splittedURL = thisURL.split('/');
+            projectID = splittedURL[splittedURL.length-2];
+            //alert(projectID);
 
-	
-	function getSounds(bot){
-		var robot=findBot(bot);
-		var reqList = [];
-		var sList = null;
+            //req.open("GET","http://projects.scratch.mit.edu/internalapi/project/37321876/get/",false);
+            req.open("GET","http://projects.scratch.mit.edu/internalapi/project/"+ projectID +"/get/",false);
+            req.send(null);
 
-		if(robot!=null){
-			var req = new ROSLIB.ServiceRequest({
-				data : "*"
-			});
+            var msn = "";
 
-			robot.getAudioListService.callService(req, function( result1 ){
-					ls = result1.list;
-					ls=ls.sort();
-					setBlocks(bot,ls);
-					ScratchExtensions.register(bot, descriptor2, ext);
-			});
-		}
-	}
+            if(req.status == 200){
+                msn = eval("(" + req.responseText + ")");
+            }
 
+            return msn;
+        }
+    }
 
-	ext.stopAllSound = function(bot){
-		var robot=findBot(bot);
-		
-		if(robot!=null){
-			var stopAllRequest =  new ROSLIB.ServiceRequest({
-			});
-					
-			robot.stopAllService.callService(stopAllRequest, function( result1 ){
-			});
-		}
-	}
+    ext.playScratchSound = function(bot,sound,sprite){
+        var robot = findBot(bot);
 
-	ext.mouthDrawImage = function(bot,costume,sprite,callback){
-		var robot=findBot(bot);
+        if(robot!=null){
+            //var msn = eval("(" + req.responseText + ")");
+            //para buscar en children y costumes hay que hacer una búsqueda para quedarte con el que corresponda
+            var msn = getScratchJson();
+            var childs = msn.children;
+            var i=0;
+            var index1 = 0;
+            var index2 = 0;
+            for(i=0; i<childs.length; i++){
+                if(childs[i].objName == sprite)
+                    index1 = i;
+            }
 
-		if (window.XMLHttpRequest && robot!=null)
-		{// code for IE7+, Firefox, Chrome, Opera, Safari
-			req=new XMLHttpRequest();
+            var costumes = childs[index1].sounds;
+            for(i=0; i<costumes.length; i++){
+                if(costumes[i].soundName == sound)
+                    index2 = i;
+            }
 
-			//OBTAIN THE PROJECT ID
-			thisURL = document.URL;
-			splittedURL = thisURL.split('/');
-			projectID = splittedURL[splittedURL.length-2];
-			//alert(projectID);
+            md5Code = msn.children[index1].sounds[index2].md5;
 
-			//req.open("GET","http://projects.scratch.mit.edu/internalapi/project/37321876/get/",false);
-			req.open("GET","http://projects.scratch.mit.edu/internalapi/project/"+ projectID +"/get/",false);
-			req.send(null);
+            SoundUrl = "http://cdn.assets.scratch.mit.edu/internalapi/asset/"+ md5Code +"/get/";
 
-			if(req.status == 200){
-				//alert(req.responseText);
+            var playSoundRequest =  new ROSLIB.ServiceRequest({
+                data: SoundUrl
+            });
+                        
+            robot.playSoundScratch.callService(playSoundRequest, function( result1 ){
+            });
+        }
+    }
 
-				//OBTAIN THE MD5 OF COSTUME TO SHOW
-				var msn = eval("(" + req.responseText + ")");
-				//para buscar en children y costumes hay que hacer una búsqueda para quedarte con el que corresponda
-				var childs = msn.children;
-				var i=0;
-				var index1 = 0;
-				var index2 = 0;
-				for(i=0; i<childs.length; i++){
-					if(childs[i].objName == sprite)
-						index1 = i;
-				}
+    ext.scSounds = function(bot,sound){
+        /*var robot = findBot(bot);
 
-				var costumes = childs[index1].costumes;
-				for(i=0; i<costumes.length; i++){
-					if(costumes[i].costumeName == costume)
-						index2 = i;
-				}
+        if(robot!=null){
+            //var msn = eval("(" + req.responseText + ")");
+            //para buscar en children y costumes hay que hacer una búsqueda para quedarte con el que corresponda
+            var msn = getScratchJson();
+            var childs = msn.children;
+            var i=0;
+            var index1 = 0;
+            var index2 = 0;
+            for(i=0; i<childs.length; i++){
+                if(childs[i].objName == sprite)
+                    index1 = i;
+            }
 
-				md5Code = msn.children[index1].costumes[index2].baseLayerMD5;
-				//alert(md5Code);
+            var costumes = childs[index1].sounds;
+            for(i=0; i<costumes.length; i++){
+                if(costumes[i].soundName == sound)
+                    index2 = i;
+            }
 
-				extMd5 = md5Code.split('.');
-				//if(!md5Code.endsWith('svg')){
-				if(extMd5[(extMd5.length)-1] != 'svg'){
-					ImageUrl = "http://cdn.assets.scratch.mit.edu/internalapi/asset/"+ md5Code +"/get/";
+            md5Code = msn.children[index1].sounds[index2].md5;
 
-					//alert(ImageUrl);
+            SoundUrl = "http://cdn.assets.scratch.mit.edu/internalapi/asset/"+ md5Code +"/get/";
 
-					var drawImageRequest =  new ROSLIB.ServiceRequest({
-						file: ImageUrl
-					});
-							
-					robot.mouthDrawImage.callService(drawImageRequest, function( result1 ){
+            var playSoundRequest =  new ROSLIB.ServiceRequest({
+                data: SoundUrl
+            });
+                        
+            robot.playSoundScratch.callService(playSoundRequest, function( result1 ){
+            });
+        }*/
 
-					});
-				}
-			}
-		}
-
-		callback();
-	}
-
-	function getScratchJson(){
-		if (window.XMLHttpRequest)
-		{// code for IE7+, Firefox, Chrome, Opera, Safari
-			req=new XMLHttpRequest();
-
-			//OBTAIN THE PROJECT ID
-			thisURL = document.URL;
-			splittedURL = thisURL.split('/');
-			projectID = splittedURL[splittedURL.length-2];
-			//alert(projectID);
-
-			//req.open("GET","http://projects.scratch.mit.edu/internalapi/project/37321876/get/",false);
-			req.open("GET","http://projects.scratch.mit.edu/internalapi/project/"+ projectID +"/get/",false);
-			req.send(null);
-
-			var msn = "";
-
-			if(req.status == 200){
-				msn = eval("(" + req.responseText + ")");
-			}
-
-			return msn;
-		}
-	}
-
-	ext.playScratchSound = function(bot,sound,sprite){
-		var robot = findBot(bot);
-
-		if(robot!=null){
-			//var msn = eval("(" + req.responseText + ")");
-			//para buscar en children y costumes hay que hacer una búsqueda para quedarte con el que corresponda
-			var msn = getScratchJson();
-			var childs = msn.children;
-			var i=0;
-			var index1 = 0;
-			var index2 = 0;
-			for(i=0; i<childs.length; i++){
-				if(childs[i].objName == sprite)
-					index1 = i;
-			}
-
-			var costumes = childs[index1].sounds;
-			for(i=0; i<costumes.length; i++){
-				if(costumes[i].soundName == sound)
-					index2 = i;
-			}
-
-			md5Code = msn.children[index1].sounds[index2].md5;
-
-			SoundUrl = "http://cdn.assets.scratch.mit.edu/internalapi/asset/"+ md5Code +"/get/";
-
-			var playSoundRequest =  new ROSLIB.ServiceRequest({
-				data: SoundUrl
-			});
-						
-			robot.playSoundScratch.callService(playSoundRequest, function( result1 ){
-			});
-		}
-	}
+        alert()
+    }
 
 
 
     var descriptor = {
         blocks: [
-			[' ', '[D] connect %s to ip %s', 'connectBot', 'bot1', 'aisoy1.local'],
-			[' ', '[D] disconnect %s', 'disconnectBot', 'bot1'],
-			['w', '[D] %s set %m.selectLan language to %m.textLanguage with %m.voiceLanguage voice', 'setLanguage', 'bot1', 'all','English', 'Female'],
-			['w', '[D] %s grammar = %s', 'setGrammar', 'bot1', 'list'],
-			['w', '[A] %s %m.asrMenu ASR recognition %m.blocking', 'startStopAsr', 'bot1', 'start', 'block'],
-			//['w', 'set %s to %m.states state %m.blocking', 'setEmotion', 'bot1', 'Normal', 'block'],
-			[' ', '[A] %s state is %m.states', 'setEmotion', 'bot1', 'Normal'],
-			['w', '[A] %s says %s %m.mouthMenu mouth', 'sayTTS', 'bot1', 'text to say', 'moving'],
-			//['w', '%s say %s without moving mouth %m.blocking', 'sayWithout', 'bot1','text to say', 'block'],
-			//['w', '%s say %s moving mouth %m.blocking', 'sayWith', 'bot1', 'text to say', 'block'],
-			['w', '[A] %s says one of the %s %m.saying moving mouth %m.blocking', 'sayList', 'bot1', 'list','with','block'],
-			//['w', 'move head horizontal of %s to %n in %n seconds %m.blocking', 'moveHeadH', 'bot1',0.5, 1, 'no block'],
-			['w', '[A] %s moves head horizontal to %n %m.velocity', 'moveHeadH', 'bot1',0.5, 'medium'],
+            [' ', '[D] connect %s to ip %s', 'connectBot', 'bot1', 'aisoy1.local'],
+            [' ', '[D] disconnect %s', 'disconnectBot', 'bot1'],
+            ['w', '[D] %s set %m.selectLan language to %m.textLanguage with %m.voiceLanguage voice', 'setLanguage', 'bot1', 'all','English', 'Female'],
+            ['w', '[D] %s grammar = %s', 'setGrammar', 'bot1', 'list'],
+            ['w', '[A] %s %m.asrMenu ASR recognition %m.blocking', 'startStopAsr', 'bot1', 'start', 'block'],
+            //['w', 'set %s to %m.states state %m.blocking', 'setEmotion', 'bot1', 'Normal', 'block'],
+            ['w', '[A] %s state is %m.states', 'setEmotion', 'bot1', 'Normal'],
+            ['w', '[A] %s says %s %m.mouthMenu mouth', 'sayTTS', 'bot1', 'text to say', 'moving'],
+            //['w', '%s say %s without moving mouth %m.blocking', 'sayWithout', 'bot1','text to say', 'block'],
+            //['w', '%s say %s moving mouth %m.blocking', 'sayWith', 'bot1', 'text to say', 'block'],
+            ['w', '[A] %s says one of the %s %m.saying moving mouth %m.blocking', 'sayList', 'bot1', 'list','with','block'],
+            //['w', 'move head horizontal of %s to %n in %n seconds %m.blocking', 'moveHeadH', 'bot1',0.5, 1, 'no block'],
+            ['w', '[A] %s moves head horizontal to %n %m.velocity', 'moveHeadH', 'bot1',0.5, 'medium'],
             ['w', '[A] %s moves head vertical to %n %m.velocity', 'moveHeadV', 'bot1',0.5, 'medium'],
-			//['w', 'move head vertical of %s to %n in %n seconds %m.blocking', 'moveHeadV', 'bot1',0.5, 1, 'no block'],
-			//['w', 'move eyebrows of %s to %n in %n seconds %m.blocking', 'moveEyebrows', 'bot1',0.5, 1, 'no block'],
-			['w', '[A] %s moves eyebrows to %n %m.velocity', 'moveEyebrows', 'bot1',0.5, 'medium'],
-			//['w', 'move eyes of %s to %n in %n seconds %m.blocking', 'moveEyes', 'bot1',0.5, 1, 'no block'],
-			['w', '[A] %s moves eyes to %n %m.velocity', 'moveEyes', 'bot1',0.5, 'medium'],
-			/*['w', 'move %s forward %n seconds %m.blocking', 'moveForward', 'bot1', 1, 'no block'],
-			['w', 'move %s forward indefinitely %m.blocking', 'moveForwardI', 'bot1', 'no block'],
-			['w', 'move %s backwards %n seconds %m.blocking', 'moveBackwards', 'bot1', 1, 'no block'],
-			['w', 'move %s backwards indefinitely %m.blocking', 'moveBackwardsI', 'bot1', 'no block'],
-			['w', 'rotate %s left %n seconds %m.blocking', 'rotateLeft', 'bot1', 1, 'no block'],
-			['w', 'rotate %s left indefinitely %m.blocking', 'rotateLeftI', 'bot1', 'no block'],
-			['w', 'rotate %s right %n seconds %m.blocking', 'rotateRight', 'bot1', 1, 'no block'],
-			['w', 'rotate %s right indefinitely %m.blocking', 'rotateRightI', 'bot1', 'no block'],
-			['w', 'stop %s %m.blocking', 'stopBot', 'bot1', 'no block'],*/
-			['w', '[A] %s heart light to: red %n green %n blue %n in %n secs', 'hearth', 'bot1', 255, 255, 255, 1],
-			//['w', '[A] %s draw in mouth picture %s %m.blocking', 'mouthDraw','bot1','                                          x            xx            x x          x   x        x     xxxxxxxx                               ','no block'],
-			['w', '[A] %s draws %s of %s in mouth', 'mouthDrawImage', 'bot1','costume1','Sprite1'],
-			['w', '[A] %s writes %s in mouth', 'mouthWrite','bot1','text to write'],
-			['h', '[E] when %s is touched at %m.sides', 'botTouched', 'bot1', 'head'],
-			['h', '[E] when %s is in position %m.positions', 'botMoved', 'bot1', 'standup'],
-			['h', '[E] when %s hears %s', 'botHeard', 'bot1', 'sentence'],
+            //['w', 'move head vertical of %s to %n in %n seconds %m.blocking', 'moveHeadV', 'bot1',0.5, 1, 'no block'],
+            //['w', 'move eyebrows of %s to %n in %n seconds %m.blocking', 'moveEyebrows', 'bot1',0.5, 1, 'no block'],
+            ['w', '[A] %s moves eyebrows to %n %m.velocity', 'moveEyebrows', 'bot1',0.5, 'medium'],
+            //['w', 'move eyes of %s to %n in %n seconds %m.blocking', 'moveEyes', 'bot1',0.5, 1, 'no block'],
+            ['w', '[A] %s moves eyes to %n %m.velocity', 'moveEyes', 'bot1',0.5, 'medium'],
+            ['w', '[A] %s heart light to: red %n green %n blue %n in %n secs', 'hearth', 'bot1', 255, 255, 255, 1],
+            //['w', '[A] %s draw in mouth picture %s %m.blocking', 'mouthDraw','bot1','                                          x            xx            x x          x   x        x     xxxxxxxx                               ','no block'],
+            //['w', '[A] %s draws %s of %s in mouth', 'mouthDrawImage', 'bot1','costume1','Sprite1'],
+            ['w', '[A] %s writes %s in mouth', 'mouthWrite','bot1','text to write'],
+            ['h', '[E] when %s is touched at %m.sides', 'botTouched', 'bot1', 'head'],
+            ['h', '[E] when %s is in position %m.positions', 'botMoved', 'bot1', 'standup'],
+            ['h', '[E] when %s hears %s', 'botHeard', 'bot1', 'sentence'],
             ['h', '[E] when %s detects %n faces', 'botFace', 'bot1', 1],
             //['h', '[E] when %s gets %s from qr', 'botQr', 'bot1', 'code'],
             ['h', '[E] when %s %m.qrMenu %s from qr', 'botQr', 'bot1','gets','code'],
             ['h', '[E] when %s gets %m.eyesCoverMenu its eyes', 'botEyesCover', 'bot1','covered'],
+            ['h', '[E] when %s detects %m.colorValues color', 'botColorViewed', 'bot1', 'red'],
             //['h', '[E] when %s gets %s from rfid', 'botRfid', 'bot1', 'code'],
         ],
-		menus: {
-			selectLan: ['all', 'ASR', 'TTS'],
-			textLanguage: ['English', 'Spanish', 'Catalan', 'French'],
-			voiceLanguage: ['Female','Male'],
-			states: ['Normal', 'Sad', 'Happy', 'Angry', 'Indifferent', 'Surprise', 'Disgust', 'Relief', 'Reproach', 'Pride', 'Admiration', 'Scared', 'Sleep', 'NoEmotion'],
-			saying: ['with','without'],
-			sides: ['head', 'left', 'right'],
-			//positions: [0, 1, 2, 3],
-			positions: ['left', 'right', 'forward', 'backward', 'standup', 'facedown'],
-			blocking: ['block', 'no block'],
-			asrMenu: ['start','stop'],
-			mouthMenu: ['moving', 'without moving'],
-			soundList: scratchList,
-			velocity: ['slow','medium','fast'],
+        menus: {
+            selectLan: ['all', 'ASR', 'TTS'],
+            textLanguage: ['English', 'Spanish', 'Catalan', 'French'],
+            voiceLanguage: ['Female','Male'],
+            states: ['Normal', 'Sad', 'Happy', 'Angry', 'Indifferent', 'Surprise', 'Disgust', 'Relief', 'Reproach', 'Pride', 'Admiration', 'Scared', 'Sleep', 'NoEmotion'],
+            saying: ['with','without'],
+            sides: ['head', 'left', 'right'],
+            //positions: [0, 1, 2, 3],
+            positions: ['left', 'right', 'forward', 'backward', 'standup', 'facedown'],
+            blocking: ['block', 'no block'],
+            asrMenu: ['start','stop'],
+            mouthMenu: ['moving', 'without moving'],
+            soundList: scratchList,
+            velocity: ['slow','medium','fast'],
             qrMenu: ['gets','does not get'],
-            eyesCoverMenu: ['covered','discovered']
-		},
+            eyesCoverMenu: ['covered','discovered'],
+            colorValues: ['red','green','blue','yellow']
+        },
     };
 
     function setBlocks(name, list){
-    	descriptor2 = {
-	        blocks: [
-				[' ', '[A] %s plays %m.soundList sound', 'playSound', name , ''],
-				[' ', '[A] %s plays %s of %s', 'playScratchSound', name, 'sound1', 'Sprite1'],
-				[' ', '[A] %s stops all sounds', 'stopAllSound', name , ''],
-				['w', '[A] %s moves forward %n seconds %m.velocity', 'moveForward', name, 1, 'medium'],
-				//['w', '[A] %s moves forward indefinitely %m.velocity %m.activate', 'moveForwardI', name, 'medium', 'off'],
-				['w', '[A] %s moves backwards %n seconds %m.velocity', 'moveBackwards', name, 1, 'medium'],
-				//['w', '[A] %s moves backwards indefinitely %m.velocity %m.activate', 'moveBackwardsI', name, 'medium','off'],
-				['w', '[A] %s rotates left %n seconds %m.velocity', 'rotateLeft', name, 1, 'medium'],
-				//['w', '[A] %s rotates left indefinitely %m.velocity %m.activate', 'rotateLeftI', name, 'medium', 'off'],
-				['w', '[A] %s rotates right %n seconds %m.velocity', 'rotateRight', name, 1, 'medium'],
-				//['w', '[A] %s rotates right indefinitely %m.velocity %m.activate', 'rotateRightI', name, 'medium', 'off'],
-				['w', '[A] %s stops', 'stopBot', name],
-	        ],
-			menus: {
-				//soundList: scratchList
-				soundList: list,
-				blocking: ['block', 'no block'],
-				velocity: ['slow','medium','fast'],
-				activate: ['on', 'off']
-			},
-    	};
+        descriptor2 = {
+            blocks: [
+                [' ', '[A] %s plays %m.soundList sound', 'playSound', name , ''],
+                //[' ', '[A] %s plays %s of %s', 'playScratchSound', name, 'sound1', 'Sprite1'],
+                [' ', '[A] %s stops all sounds', 'stopAllSound', name , ''],
+                ['w', '[A] %s moves forward %n seconds %m.velocity', 'moveForward', name, 1, 'medium'],
+                //['w', '[A] %s moves forward indefinitely %m.velocity %m.activate', 'moveForwardI', name, 'medium', 'off'],
+                ['w', '[A] %s moves backwards %n seconds %m.velocity', 'moveBackwards', name, 1, 'medium'],
+                //['w', '[A] %s moves backwards indefinitely %m.velocity %m.activate', 'moveBackwardsI', name, 'medium','off'],
+                ['w', '[A] %s rotates left %n seconds %m.velocity', 'rotateLeft', name, 1, 'medium'],
+                //['w', '[A] %s rotates left indefinitely %m.velocity %m.activate', 'rotateLeftI', name, 'medium', 'off'],
+                ['w', '[A] %s rotates right %n seconds %m.velocity', 'rotateRight', name, 1, 'medium'],
+                //['w', '[A] %s rotates right indefinitely %m.velocity %m.activate', 'rotateRightI', name, 'medium', 'off'],
+                ['w', '[A] %s stops', 'stopBot', name],
+                //['w', '[A] %s plays %m.sound', 'scSounds', name, 'sound1']
+            ],
+            menus: {
+                //soundList: scratchList
+                soundList: list,
+                blocking: ['block', 'no block'],
+                velocity: ['slow','medium','fast'],
+                activate: ['on', 'off']
+            },
+        };
     }
 
     function setBlocksMinecraft(name, list){
