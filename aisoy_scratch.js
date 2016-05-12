@@ -185,8 +185,8 @@ new (function() {
 
 		this.onoffASR = new ROSLIB.Service({
 			ros : this.ros,
-			name : '/airos5/asr/set_mode',
-			serviceType : 'airos_asr/set_mode'
+			name : '/airos5/asr/enable',
+			serviceType : 'airos_asr/enable'
 		})
 
 		this.setVoice = new ROSLIB.Service({
@@ -1151,16 +1151,17 @@ new (function() {
 		if(robot!=null){
 			var mode;
 			if(option=="start"){
-				mode = "enable";
+				mode = true;
 				robot.listening = true;
 			}
 			else{
-				mode = "disable";
+				mode = false;
 				robot.listening = false;
 			}
 
 			var request = new ROSLIB.ServiceRequest({
 				data : mode,
+                wait : true
 			});
 
 			robot.onoffASR.callService(request, function( result1 ){
