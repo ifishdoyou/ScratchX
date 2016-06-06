@@ -730,6 +730,8 @@ new (function() {
 
 	function botSay(bot,text,moving,callback){
 		var robot=findBot(bot);
+
+        text = text.replace("\"","") //Not using doble quotes ("")
 		
 		if(robot!=null){
 			var sayRequest =  new ROSLIB.ServiceRequest({
