@@ -1495,7 +1495,7 @@ new (function() {
 			selectLan: ['all', 'ASR', 'TTS'],
 			textLanguage: ['English', 'Spanish', 'Catalan', 'French'],
 			voiceLanguage: ['Male','Female'],
-			states: ['Normal', 'Sad', 'Happy', 'Angry', 'Indifferent', 'Surprise', 'Disgust', 'Relief', 'Reproach', 'Pride', 'Admiration', 'Scared', 'Sleep', 'NoEmotion', 'Doubt'],
+			states: ['Normal', 'Sad', 'Happy', 'Angry', 'Indifferent', 'Surprise', 'Disgust', 'Relief', 'Reproach', 'Pride', 'Admiration', 'Scared', 'Sleep', 'NoEmotion'],
 			saying: ['with','without'],
 			sides: ['head', 'left', 'right'],
 			//positions: [0, 1, 2, 3],
